@@ -1,0 +1,15 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\NewCoconutThrower.cs">
+    <Files>
+      <File FileName="Assets\Standard Assets\Character Controllers\Sources\Scripts\MouseLook.cs" Line="32" Column="2" />
+      <File FileName="Assets\Scripts\MainMenuGUI.cs" Line="54" Column="5" />
+      <File FileName="Assets\Standard Assets\Character Controllers\Sources\Scripts\newThirdPersonCamera.js" Line="206" Column="24" />
+      <File FileName="Assets\Scripts\NewCoconutThrower.cs" Line="13" Column="2" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
