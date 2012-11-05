@@ -5,8 +5,11 @@ private var _target : Transform;
 
 // The distance in the x-z plane to the target
 
-var distance = 7.0;
-
+private var distance = 3.0;
+var minDistance = 1.0;
+var maxDistance = 4.0;
+var minHeight = -1.0;
+var maxHeight = 5.0;
 // the height we want the camera to be above the target
 var height = 3.0;
 
@@ -58,7 +61,7 @@ function Awake ()
 		Debug.Log("Please assign a target to the camera that has a ThirdPersonController script attached.");
 
 	
-	Cut(_target, centerOffset);
+	//Cut(_target, centerOffset);
 }
 
 function DebugDrawStuff ()
@@ -146,13 +149,50 @@ function Apply (dummyTarget : Transform, dummyCenter : Vector3)
 	
 	// Set the position of the camera on the x-z plane to:
 	// distance meters behind the target
+	
 	/*cameraTransform.position = targetCenter;
 	cameraTransform.position += currentRotation * Vector3.back * distance;
 
 	// Set the height of the camera
-	cameraTransform.position.y = currentHeight;*/
-	
+	cameraTransform.position.y = currentHeight;
+	*/
 	// Always look at the target	
+	var cameraPos3 = cameraTransform.position;
+	var offsetToCenter3 = targetCenter - cameraPos3;
+	var offsetToCenter2 = Vector2(offsetToCenter3.x, offsetToCenter3.z);
+	var deltaAngle2 = Vector3.Angle(
+		Vector3(offsetToCenter3.x, 0, offsetToCenter3.z),  
+		Vector3(cameraTransform.forward.x, 0, cameraTransform.forward.z));
+	var newDist = offsetToCenter2.magnitude;
+	var oldDist = newDist == 0 ? 0 : newDist * Mathf.Cos(Mathf.Deg2Rad * deltaAngle2);
+	if(oldDist > maxDistance){
+		oldDist = maxDistance;
+	}
+	else if (oldDist < minDistance){
+		oldDist = minDistance;
+	}
+	
+	var cameraHeight = cameraTransform.position.y;
+	if(cameraTransform.position.y - targetCenter.y > maxHeight){
+		cameraHeight = targetCenter.y + maxHeight;
+	}
+	else if (cameraTransform.position.y - targetCenter.y < minHeight){
+		cameraHeight = targetCenter.y + minHeight;
+	}
+	
+	/*cameraTransform.position = Vector3(
+		targetCenter.x - (offsetToCenter2.normalized * oldDist).x,
+		cameraHeight,
+		targetCenter.z - (offsetToCenter2.normalized * oldDist).y);*/
+		
+	cameraTransform.position = targetCenter;
+	cameraTransform.position.y = cameraHeight;
+	var controller : CharacterController = Camera.main.GetComponent(CharacterController);
+	controller.Move(Vector3(
+		-(offsetToCenter2.normalized * oldDist).x,
+		0,
+		-(offsetToCenter2.normalized * oldDist).y));
+		
 	SetUpRotation(targetCenter, targetHead);
 }
 
@@ -196,13 +236,13 @@ function SetUpRotation (centerPos : Vector3, headPos : Vector3)
 	var offsetToCenter = centerPos - cameraPos;
 	
 	// Generate base rotation only around y-axis
-	var yRotation = Quaternion.LookRotation(Vector3(offsetToCenter.x, 0, offsetToCenter.z));
-
-	var relativeOffset = Vector3.forward * distance + Vector3.down * height;
-	cameraTransform.rotation = yRotation * Quaternion.LookRotation(relativeOffset);
+	var yRotation = Quaternion.LookRotation(Vector3(offsetToCenter.x, offsetToCenter.y, offsetToCenter.z), Vector3.up);
+	
+	//var relativeOffset = Vector3.forward * distance + Vector3.down * height;
+	cameraTransform.rotation = yRotation;// * Quaternion.LookRotation(relativeOffset);
 
 	// Calculate the projected center position and top position in world space
-	var centerRay = cameraTransform.camera.ViewportPointToRay(Vector3(.5, 0.5, 1));
+	/*var centerRay = cameraTransform.camera.ViewportPointToRay(Vector3(.5, 0.5, 1));
 	var topRay = cameraTransform.camera.ViewportPointToRay(Vector3(.5, clampHeadPositionScreenSpace, 1));
 
 	var centerRayPos = centerRay.GetPoint(distance);
@@ -221,7 +261,7 @@ function SetUpRotation (centerPos : Vector3, headPos : Vector3)
 	{
 		extraLookAngle = extraLookAngle - centerToTopAngle;
 		cameraTransform.rotation *= Quaternion.Euler(-extraLookAngle, 0, 0);
-	}
+	}*/
 }
 
 function GetCenterOffset ()

@@ -44,16 +44,20 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\CameraMode.cs" />
+     <Compile Include="Assets\Scripts\AimCamera.cs" />
      <Compile Include="Assets\Scripts\Animator.cs" />
      <Compile Include="Assets\Scripts\CoconutThrower.cs" />
      <Compile Include="Assets\Scripts\CoconutWin.cs" />
      <Compile Include="Assets\Scripts\DoorManager.cs" />
      <Compile Include="Assets\Scripts\FPSDisplayer.cs" />
      <Compile Include="Assets\Scripts\Fader.cs" />
+     <Compile Include="Assets\Scripts\GameCamera.cs" />
      <Compile Include="Assets\Scripts\Inventory.cs" />
      <Compile Include="Assets\Scripts\MainMenuBtns.cs" />
      <Compile Include="Assets\Scripts\MainMenuGUI.cs" />
      <Compile Include="Assets\Scripts\Matches.cs" />
+     <Compile Include="Assets\Scripts\MouseLook.cs" />
      <Compile Include="Assets\Scripts\NewCoconutThrower.cs" />
      <Compile Include="Assets\Scripts\PlayerCollisions.cs" />
      <Compile Include="Assets\Scripts\PowerCell.cs" />

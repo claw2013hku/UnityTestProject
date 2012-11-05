@@ -146,11 +146,11 @@ function Apply (dummyTarget : Transform, dummyCenter : Vector3)
 	
 	// Set the position of the camera on the x-z plane to:
 	// distance meters behind the target
-	/*cameraTransform.position = targetCenter;
+	cameraTransform.position = targetCenter;
 	cameraTransform.position += currentRotation * Vector3.back * distance;
 
 	// Set the height of the camera
-	cameraTransform.position.y = currentHeight;*/
+	cameraTransform.position.y = currentHeight;
 	
 	// Always look at the target	
 	SetUpRotation(targetCenter, targetHead);
@@ -199,7 +199,7 @@ function SetUpRotation (centerPos : Vector3, headPos : Vector3)
 	var yRotation = Quaternion.LookRotation(Vector3(offsetToCenter.x, 0, offsetToCenter.z));
 
 	var relativeOffset = Vector3.forward * distance + Vector3.down * height;
-	cameraTransform.rotation = yRotation * Quaternion.LookRotation(relativeOffset);
+	//cameraTransform.rotation = yRotation * Quaternion.LookRotation(relativeOffset);
 
 	// Calculate the projected center position and top position in world space
 	var centerRay = cameraTransform.camera.ViewportPointToRay(Vector3(.5, 0.5, 1));
@@ -220,7 +220,7 @@ function SetUpRotation (centerPos : Vector3, headPos : Vector3)
 	else
 	{
 		extraLookAngle = extraLookAngle - centerToTopAngle;
-		cameraTransform.rotation *= Quaternion.Euler(-extraLookAngle, 0, 0);
+		//cameraTransform.rotation *= Quaternion.Euler(-extraLookAngle, 0, 0);
 	}
 }
 
