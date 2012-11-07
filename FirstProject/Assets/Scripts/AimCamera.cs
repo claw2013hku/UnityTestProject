@@ -5,7 +5,6 @@ public class AimCamera : MonoBehaviour {
 	public Transform player;
 	
 	public float smoothingTime = 0.5f;
-	public float cameraRotSmoothingTime = 1f;
 	
 	public Vector3 pivotOffset = new Vector3(1.3f, 0.4f,  0.0f);
 	public Vector3 camOffset   = new Vector3(0.0f, 0.7f, -2.4f);
@@ -18,9 +17,13 @@ public class AimCamera : MonoBehaviour {
 	
 	public float mouseSensitivity = 0.1f;
 	
+	[HideInInspector]
+	public Vector3 position;
+	[HideInInspector]
+	public Quaternion rotation;
+	
 	private float angleH = 0;
 	private float angleV = 0;
-	private Transform cam;
 	private float maxCamDist = 1;
 	private LayerMask mask;
 	private Vector3 smoothPlayerPos;
@@ -34,7 +37,8 @@ public class AimCamera : MonoBehaviour {
 		// Invert mask
 		mask = ~mask;
 		
-		cam = transform;
+		position = transform.position;
+		rotation = transform.rotation;
 		smoothPlayerPos = player.position;
 		
 		maxCamDist = 3;
@@ -42,19 +46,34 @@ public class AimCamera : MonoBehaviour {
 	
 	// Update is called once per frame
 	void LateUpdate () {
-		if (Time.deltaTime == 0 || Time.timeScale == 0 || player == null) 
-			return;
+		/*if (Time.deltaTime == 0 || Time.timeScale == 0 || player == null) 
+			return;*/
 		
 		angleH += Mathf.Clamp(Input.GetAxis("Mouse X"), -1, 1) * horizontalAimingSpeed * Time.deltaTime;
 		angleV += Mathf.Clamp(Input.GetAxis("Mouse Y"), -1, 1) * verticalAimingSpeed * Time.deltaTime;
 		// limit vertical angle
 		angleV = Mathf.Clamp(angleV, minVerticalAngle, maxVerticalAngle);
 		
+		Apply();
+	}
+	
+	void OnGUI () {
+		if (Time.time != 0 && Time.timeScale != 0)
+			GUI.DrawTexture(new Rect(Screen.width/2-(reticle.width*0.5f), Screen.height/2-(reticle.height*0.5f), reticle.width, reticle.height), reticle);
+	}
+	
+	public void SetCurrentAngle(){
+		angleH = transform.rotation.eulerAngles.y;
+		angleV = transform.rotation.eulerAngles.x > 180 ? transform.rotation.eulerAngles.x - 360 : transform.rotation.eulerAngles.x;
+		angleV = -angleV;
+	}
+	
+	public void Apply(){
 		// Set aim rotation
 		Quaternion aimRotation = Quaternion.Euler(-angleV, angleH, 0);
 		Quaternion camYRotation = Quaternion.Euler(0, angleH, 0);
 		//cam.rotation = Quaternion.Lerp(cam.rotation, aimRotation, 1);
-		cam.rotation = aimRotation;
+		rotation = aimRotation;
 		// Find far and close position for the camera
 		smoothPlayerPos = Vector3.Slerp(smoothPlayerPos, player.position, smoothingTime * Time.deltaTime);
 		smoothPlayerPos.x = player.position.x;
@@ -75,19 +94,7 @@ public class AimCamera : MonoBehaviour {
 			maxCamDist = hit.distance - padding;
 			Debug.Log("hit");
 		}
-		//cam.position = closeCamPoint + closeToFarDir * maxCamDist;
-		Vector3 unLerpedPos = closeCamPoint + closeToFarDir * maxCamDist;
-		cam.position = Vector3.Slerp(cam.position, unLerpedPos, cameraRotSmoothingTime);
-	}
-	
-	void OnGUI () {
-		if (Time.time != 0 && Time.timeScale != 0)
-			GUI.DrawTexture(new Rect(Screen.width/2-(reticle.width*0.5f), Screen.height/2-(reticle.height*0.5f), reticle.width, reticle.height), reticle);
-	}
-	
-	void ResetAngle(){
-		angleH = transform.localRotation.eulerAngles.y;
-		angleV = transform.localRotation.eulerAngles.x > 180 ? transform.localRotation.eulerAngles.x - 360 : transform.localRotation.eulerAngles.x;
-		angleV = -angleV;
+		
+		position = closeCamPoint + closeToFarDir * maxCamDist;
 	}
 }
