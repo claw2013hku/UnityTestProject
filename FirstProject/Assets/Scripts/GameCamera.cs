@@ -36,7 +36,7 @@ public class GameCamera : MonoBehaviour {
 	private bool storeDist = false;
 	private float storedDist = 0f;
 	
-	private ThirdPersonController2 controller;
+	private ThirdPersonTouchController controller;
 	
 	// Use this for initialization
 	void Start () {
@@ -54,7 +54,7 @@ public class GameCamera : MonoBehaviour {
 		if (Time.deltaTime == 0 || Time.timeScale == 0 || player == null) 
 			return;
 		
-		controller = playerObj.GetComponent<ThirdPersonController2>();
+		controller = playerObj.GetComponent<ThirdPersonTouchController>();
 		
 		Vector3	targetCenter = player.position;	
 		Vector3 offsetToCamera = targetCenter - position;
@@ -85,12 +85,12 @@ public class GameCamera : MonoBehaviour {
 		Quaternion direction = Quaternion.LookRotation(offsetToCamera, Vector3.up);
 		Quaternion newDirection;
 		float xRot = direction.eulerAngles.x > 180 ? direction.eulerAngles.x - 360 : direction.eulerAngles.x;
-		xRot += Input.GetAxis("Mouse Y") * mouseSensitivity * verticalAimingSpeed;
+		xRot += -ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_Y) * mouseSensitivity * verticalAimingSpeed;
 		xRot = Mathf.Clamp(xRot, minVerticalAngle, maxVerticalAngle);
 		xRot = xRot < 0 ? 360 + xRot : xRot;
 		float yRot = direction.eulerAngles.y;
 //		Debug.Log ("xRot: " + xRot);
-		yRot += Input.GetAxis("Mouse X") * mouseSensitivity * horizontalAimingSpeed;
+		yRot += ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_X) * mouseSensitivity * horizontalAimingSpeed;
 		newDirection = 
 			Quaternion.Euler(
 				xRot, 

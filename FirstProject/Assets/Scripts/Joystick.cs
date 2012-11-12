@@ -14,6 +14,8 @@ public class Joystick : MonoBehaviour {
 	private int lastFingerId = -1;
 	
 	public Vector2 position = Vector2.zero;
+	public Vector2 positionDelta = Vector2.zero;
+	private Vector2 lastPosition = Vector2.zero;
 	public Vector2 deadZone = Vector2.zero;
 	public int tapCount;
 	public bool normalize;
@@ -27,6 +29,12 @@ public class Joystick : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		gui = GetComponent<GUITexture>();
+		float width = gui.pixelInset.width * Screen.width;
+		gui.pixelInset = new Rect(
+			gui.pixelInset.x * Screen.width - width / 2, 
+			gui.pixelInset.y * Screen.height - width / 2, 
+			width, 
+			width);
 		//get where the gui texture was originally placed
 		defaultRect = gui.pixelInset;
 		// get our offset for center instead of corner
@@ -96,13 +104,15 @@ public class Joystick : MonoBehaviour {
 		else if(normalize){
 			position.y = Mathf.Sign(position.y) * (absoluteY - deadZone.y) / (1 - deadZone.y);	
 		}
-		if(IsJustDown()){
-			Debug.Log("IsJustDown()");
-		}
-		if(isJustUp){
-			Debug.Log("IsJustUp()");
-		}
+//		if(isJustDown){
+//			Debug.Log("IsJustDown()");
+//		}
+//		if(isJustUp){
+//			Debug.Log("IsJustUp()");
+//		}
 		//Debug.Log("IsJustDown() : " + IsJustDown() + " IsJustUp() : " + IsJustUp());
+		positionDelta = position - lastPosition;
+		lastPosition = position;
 	}
 	
 	void LatchedFinger(int fingerId){
@@ -147,6 +157,7 @@ public class Joystick : MonoBehaviour {
 					j.LatchedFinger(touch.fingerId);	
 				}
 			}
+			//Debug.Log("IsJustDown");
 			isJustDown = true;
 		}
 		else if(lastFingerId == touch.fingerId){
@@ -164,6 +175,7 @@ public class Joystick : MonoBehaviour {
 			if(touch.phase == TouchPhase.Canceled || 
 				touch.phase == TouchPhase.Ended){
 				Reset ();	
+				//Debug.Log("IsJustUp");
 				isJustUp = true;
 			}
 		}

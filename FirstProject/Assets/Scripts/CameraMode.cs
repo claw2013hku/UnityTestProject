@@ -18,6 +18,8 @@ public class CameraMode : MonoBehaviour {
 	private Quaternion transRot;
 	private bool transitioning = false;
 	
+	private CameraModes lastCameraMode;
+	
 	// Use this for initialization
 	void Start () {
 		aimCamera = GetComponent<AimCamera>();
@@ -30,10 +32,14 @@ public class CameraMode : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetButtonDown("Camera"))
+		if(lastCameraMode != CameraModes.AimCamera && ControlSchemeInterface.instance.GetAxis(ControlAxis.AIMING) == 1.0f)
 		{
-			SwitchCameraMode();
+			SwitchCameraMode(CameraModes.AimCamera);
 		}
+		else if (lastCameraMode != CameraModes.MoveCamera && ControlSchemeInterface.instance.GetAxis(ControlAxis.AIMING) == 0.0f){
+			SwitchCameraMode(CameraModes.MoveCamera);	
+		}
+		
 		Vector3 newPosition = transform.position;
 		Quaternion newRotation = transform.rotation;
 		switch(cameraMode){
@@ -58,6 +64,7 @@ public class CameraMode : MonoBehaviour {
 			transform.position = newPosition;
 			transform.rotation = newRotation;
 		}
+		lastCameraMode = cameraMode;
 	}
 	
 	void ToggleCameraMode(CameraModes mode, bool on){
@@ -83,10 +90,16 @@ public class CameraMode : MonoBehaviour {
 		}
 	}
 	
-	void SwitchCameraMode(){
+	void NextCameraMode(){
 		ToggleCameraMode(cameraMode, false);
 		cameraMode++;
 		cameraMode = cameraMode >= CameraModes.Last ? (CameraModes)((int)cameraMode % (int)CameraModes.Last) : cameraMode;
+		ToggleCameraMode(cameraMode, true);
+	}
+			
+	void SwitchCameraMode(CameraModes mode){
+		ToggleCameraMode(cameraMode, false);
+		cameraMode = mode;
 		ToggleCameraMode(cameraMode, true);
 	}
 }

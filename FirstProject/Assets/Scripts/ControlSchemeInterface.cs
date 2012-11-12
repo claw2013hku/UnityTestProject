@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class ControlSchemeInterface : MonoBehaviour {
-
+	public static ControlSchemeInterface instance;
 	// Use this for initialization
 	void Start () {
 	
@@ -13,19 +13,9 @@ public class ControlSchemeInterface : MonoBehaviour {
 	
 	}
 	
-	public float GetAxis(string axisName){
+	virtual public float GetAxis(ControlAxis axis){
 		return 0f;	
 	}
-	
-	public bool GetButtonDown(string buttonName){
-		return false;
-	}
-	
-	public bool GetButtonUp(string buttonName){
-		return false;
-	}
-	
-	public bool GetButton(string buttonName){
-		return false;	
-	}
 }
+
+public enum ControlAxis{THROW, CAMERA_SCROLL_X, CAMERA_SCROLL_Y, MOVE_X, MOVE_Y, AIMING};

@@ -20,6 +20,10 @@ public class WindowPad : MonoBehaviour {
 	
 	public List<Vector2> deltas = new List<Vector2>();
 	public List<float> times = new List<float>();
+	public int fingerCount = 0;
+	
+	public float sensitivityX = 1f;
+	public float sensitivityY = 1f;
 	
 	// Use this for initialization
 	void Start () {
@@ -53,6 +57,7 @@ public class WindowPad : MonoBehaviour {
 				Poll(Input.GetTouch(i));
 			}
 		}
+		fingerCount = GetFingerCount();
 	}
 	
 	public bool Poll(Touch touch){
@@ -68,7 +73,7 @@ public class WindowPad : MonoBehaviour {
 		}
 		if(fingerIds.Contains(touch.fingerId)){
 			hasPolled = true;
-			deltaFingerPositions[touch.fingerId] = touch.deltaPosition;
+			deltaFingerPositions[touch.fingerId] = new Vector2(touch.deltaPosition.x * sensitivityX * Screen.width, touch.deltaPosition.y * sensitivityY * Screen.height);
 			//Debug.Log("deltaFingerPositions[touch.fingerId] : " + deltaFingerPositions[touch.fingerId]);
 			if(touch.phase == TouchPhase.Canceled || 
 				touch.phase == TouchPhase.Ended){
@@ -93,5 +98,21 @@ public class WindowPad : MonoBehaviour {
 			}
 		}
 		fingerEnterTimes.Remove(fingerId);
+	}
+	
+	public Dictionary<int, Vector2> GetDeltaPositions(){
+		return deltaFingerPositions;	
+	}
+	
+	public int GetFingerCount(){
+		return fingerIds.Count;
+	}
+	
+	public Vector2 GetAnyDeltaPositions(){
+		return deltaFingerPositions[fingerIds[0]];
+	}
+	
+	public List<int> GetFingerIds(){
+		return fingerIds;
 	}
 }
