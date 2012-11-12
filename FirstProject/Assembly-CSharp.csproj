@@ -46,14 +46,17 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\AimCamera.cs" />
      <Compile Include="Assets\Scripts\Animator.cs" />
+     <Compile Include="Assets\Scripts\BasicControlScheme.cs" />
      <Compile Include="Assets\Scripts\CameraMode.cs" />
      <Compile Include="Assets\Scripts\CoconutThrower.cs" />
      <Compile Include="Assets\Scripts\CoconutWin.cs" />
+     <Compile Include="Assets\Scripts\ControlSchemeInterface.cs" />
      <Compile Include="Assets\Scripts\DoorManager.cs" />
      <Compile Include="Assets\Scripts\FPSDisplayer.cs" />
      <Compile Include="Assets\Scripts\Fader.cs" />
      <Compile Include="Assets\Scripts\GameCamera.cs" />
      <Compile Include="Assets\Scripts\Inventory.cs" />
+     <Compile Include="Assets\Scripts\Joystick.cs" />
      <Compile Include="Assets\Scripts\MainMenuBtns.cs" />
      <Compile Include="Assets\Scripts\MainMenuGUI.cs" />
      <Compile Include="Assets\Scripts\Matches.cs" />
@@ -69,6 +72,7 @@
      <Compile Include="Assets\Scripts\TidyObject.cs" />
      <Compile Include="Assets\Scripts\TriggerZone.cs" />
      <Compile Include="Assets\Scripts\WinGame.cs" />
+     <Compile Include="Assets\Scripts\WindowPad.cs" />
      <None Include="Assets\Skyboxes\_skybox info.txt" />
      <None Include="Assets\Standard Assets\Water (Basic)\Sources\Shaders\FX-Water Simple.shader" />
   </ItemGroup>

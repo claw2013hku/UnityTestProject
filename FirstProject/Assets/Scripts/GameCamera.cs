@@ -89,7 +89,7 @@ public class GameCamera : MonoBehaviour {
 		xRot = Mathf.Clamp(xRot, minVerticalAngle, maxVerticalAngle);
 		xRot = xRot < 0 ? 360 + xRot : xRot;
 		float yRot = direction.eulerAngles.y;
-		Debug.Log ("xRot: " + xRot);
+//		Debug.Log ("xRot: " + xRot);
 		yRot += Input.GetAxis("Mouse X") * mouseSensitivity * horizontalAimingSpeed;
 		newDirection = 
 			Quaternion.Euler(
@@ -140,7 +140,7 @@ public class GameCamera : MonoBehaviour {
 				lerpedXRot,
 				targetRotation.eulerAngles.y,
 				targetRotation.eulerAngles.z);
-		Debug.Log("lerpedXRot: " + lerpedXRot);
+//		Debug.Log("lerpedXRot: " + lerpedXRot);
 		rotation = targetRotation;
 		position = targetPosition;
 	}

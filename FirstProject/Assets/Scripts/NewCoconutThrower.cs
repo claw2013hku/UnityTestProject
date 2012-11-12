@@ -15,15 +15,26 @@ public class NewCoconutThrower : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetButtonDown("Fire1") /*&& canThrow*/){
-			audio.PlayOneShot(throwSound);	
-			Rigidbody newCoconut = Instantiate(coconutPrefab, transform.position, transform.rotation) as Rigidbody;
-			newCoconut.name = "coconut";
-			if(newCoconut.rigidbody == null){
-				newCoconut.gameObject.AddComponent<Rigidbody>();
-			}
-			newCoconut.position += mainCamera.transform.forward * 2;
-			newCoconut.rigidbody.velocity = mainCamera.transform.forward * throwSpeed;
+//		if(Input.GetButtonDown("Fire1") /*&& canThrow*/){
+//			audio.PlayOneShot(throwSound);	
+//			Rigidbody newCoconut = Instantiate(coconutPrefab, transform.position, transform.rotation) as Rigidbody;
+//			newCoconut.name = "coconut";
+//			if(newCoconut.rigidbody == null){
+//				newCoconut.gameObject.AddComponent<Rigidbody>();
+//			}
+//			newCoconut.position += mainCamera.transform.forward * 2;
+//			newCoconut.rigidbody.velocity = mainCamera.transform.forward * throwSpeed;
+//		}
+	}
+	
+	void ShootCoconut(){
+		audio.PlayOneShot(throwSound);	
+		Rigidbody newCoconut = Instantiate(coconutPrefab, transform.position, transform.rotation) as Rigidbody;
+		newCoconut.name = "coconut";
+		if(newCoconut.rigidbody == null){
+			newCoconut.gameObject.AddComponent<Rigidbody>();
 		}
+		newCoconut.position += mainCamera.transform.forward * 2;
+		newCoconut.rigidbody.velocity = mainCamera.transform.forward * throwSpeed;
 	}
 }
