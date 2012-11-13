@@ -34,6 +34,7 @@ public class AimCamera : MonoBehaviour {
 	void Start () {
 		// Add player's own layer to mask
 		mask = 1 << player.gameObject.layer;
+		//mask |= LayerMask.NameToLayer("Player");
 		// Invert mask
 		mask = ~mask;
 		
@@ -49,8 +50,8 @@ public class AimCamera : MonoBehaviour {
 		/*if (Time.deltaTime == 0 || Time.timeScale == 0 || player == null) 
 			return;*/
 		
-		angleH += Mathf.Clamp(ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_X), -1, 1) * horizontalAimingSpeed * Time.deltaTime;
-		angleV += Mathf.Clamp(ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_Y), -1, 1) * verticalAimingSpeed * Time.deltaTime;
+		angleH += Mathf.Clamp(ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_X) + Input.GetAxisRaw("Mouse X"), -1, 1) * horizontalAimingSpeed * Time.deltaTime;
+		angleV += Mathf.Clamp(ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_Y) + Input.GetAxisRaw("Mouse Y"), -1, 1) * verticalAimingSpeed * Time.deltaTime;
 		// limit vertical angle
 		angleV = Mathf.Clamp(angleV, minVerticalAngle, maxVerticalAngle);
 		

@@ -12,13 +12,21 @@ public class CameraMode : MonoBehaviour {
 	public AimCamera aimCamera;
 	public GameCamera moveCamera;
 	
-	public float transitionTime = 0.5f;
+	public float modeTransitionTime = 0.5f;
+	public float indoorExitTransitionTime = 2f;
+	private float transitionTime = 0.5f;
+	
 	private float transTimer;
 	private Vector3 transPos;
 	private Quaternion transRot;
 	private bool transitioning = false;
 	
 	private CameraModes lastCameraMode;
+	
+	private bool useIndoorCamera = false;
+	private Transform indoorCameraTransform;
+	
+	private GameObject currentIndoorTrigger;
 	
 	// Use this for initialization
 	void Start () {
@@ -48,11 +56,17 @@ public class CameraMode : MonoBehaviour {
 				newRotation = aimCamera.rotation;
 				break;
 			case CameraModes.MoveCamera:
-				newPosition = moveCamera.position;
-				newRotation = moveCamera.rotation;
+				if(!useIndoorCamera){
+					newPosition = moveCamera.position;
+					newRotation = moveCamera.rotation;
+				}
+				else{
+					newPosition = indoorCameraTransform.position;
+					newRotation = indoorCameraTransform.rotation;
+				}
 				break;
 		}
-		if(transitioning){
+		if(transitioning && transitionTime != 0f){
 			transform.position = Vector3.Slerp(transPos, newPosition, transTimer / transitionTime);
 			transform.rotation = Quaternion.Slerp(transRot, newRotation, transTimer / transitionTime);
 			transTimer += Time.deltaTime;
@@ -83,10 +97,7 @@ public class CameraMode : MonoBehaviour {
 			break;
 		}
 		if(on){
-			transPos = transform.position;
-			transRot = transform.rotation;
-			transTimer = 0;
-			transitioning = true;
+			StartTransition(transform.position, transform.rotation, modeTransitionTime);
 		}
 	}
 	
@@ -101,5 +112,34 @@ public class CameraMode : MonoBehaviour {
 		ToggleCameraMode(cameraMode, false);
 		cameraMode = mode;
 		ToggleCameraMode(cameraMode, true);
+	}
+	
+	public void ActivateIndoorCamera(Transform _transform, bool transition, GameObject caller){
+		useIndoorCamera = true;
+		indoorCameraTransform = _transform;
+		currentIndoorTrigger = caller;
+		if(transition){
+			StartTransition(transform.position, transform.rotation, indoorExitTransitionTime);
+		}
+	}
+	
+	public void DeactivateIndoorCamera(Vector3 resetPosition, Quaternion resetRotation, bool transition, GameObject caller){
+		DeactivateIndoorCamera(caller);
+		moveCamera.Reset(resetPosition, resetRotation);
+		if(transition)
+			StartTransition(transform.position, transform.rotation, indoorExitTransitionTime);
+	}
+	
+	public void DeactivateIndoorCamera(GameObject caller){
+		if(currentIndoorTrigger == caller)
+			useIndoorCamera = false;
+	}
+	
+	private void StartTransition(Vector3 fromPos, Quaternion fromRot, float time){
+		transPos = fromPos;
+		transRot = fromRot;
+		transTimer = 0;
+		transitioning = true;	
+		transitionTime = time;
 	}
 }

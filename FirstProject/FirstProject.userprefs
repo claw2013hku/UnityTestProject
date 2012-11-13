@@ -1,6 +1,15 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\indoorCameraTrigger.cs">
+    <Files>
+      <File FileName="Assets\Scripts\Joystick.cs" Line="37" Column="4" />
+      <File FileName="Assets\Scripts\BasicControlScheme.cs" Line="59" Column="63" />
+      <File FileName="Assets\Scripts\WindowPad.cs" Line="57" Column="23" />
+      <File FileName="Assets\Scripts\GameCamera.cs" Line="88" Column="12" />
+      <File FileName="Assets\Scripts\CameraMode.cs" Line="120" Column="9" />
+      <File FileName="Assets\Scripts\indoorCameraTrigger.cs" Line="24" Column="4" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
