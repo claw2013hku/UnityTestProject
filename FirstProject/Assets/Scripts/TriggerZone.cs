@@ -39,7 +39,6 @@ public class TriggerZone : MonoBehaviour {
 			transform.FindChild("door").SendMessage("DoorCheck");	
 			if(GameObject.Find ("PowerGUI")){
 				Destroy(GameObject.Find("PowerGUI"));
-				doorLight.color = Color.green;
 			}
 //			if(Inventory.charge == 4){
 //				transform.FindChild("door").SendMessage("DoorCheck");	

@@ -44,13 +44,14 @@ public class GameCamera : MonoBehaviour {
 	
 	public bool allowMouseInput = false;
 	
+	public float raycastPadding = 10f;
 	// Use this for initialization
 	void Start () {
 		// Add player's own layer to mask
-		mask = 1 << LayerMask.NameToLayer("Player");
-		mask |= ( 1 << LayerMask.NameToLayer("Ignore Raycast"));
+		mask = 1 << LayerMask.NameToLayer("Default");
+		//mask |= ( 1 << LayerMask.NameToLayer("Ignore Raycast"));
 		// Invert mask
-		mask = ~mask;
+		//mask = ~mask;
 		position = transform.position;
 		rotation = transform.rotation;
 		maxCamDist = 3;
@@ -146,11 +147,10 @@ public class GameCamera : MonoBehaviour {
 		// Make sure camera doesn't intersect geometry
 		// Move camera towards closeOffset if ray back towards camera position intersects something 
 		RaycastHit hit;
-		float padding = 0.3f;
-		if (Physics.Raycast(targetCenter, newDirection * Vector3.back, out hit, targetDistance + padding, mask)) {
+		if (Physics.Raycast(targetCenter, newDirection * Vector3.back, out hit, targetDistance + raycastPadding, mask)) {
 			//storeDist = true;
 			storedDist = targetDistance;
-			targetDistance = hit.distance - padding;
+			targetDistance = hit.distance - raycastPadding;
 			Debug.Log ("Raycast hit, dist : " + targetDistance);
 		}
 		else{

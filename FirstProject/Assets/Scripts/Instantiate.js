@@ -1,7 +1,7 @@
-var SpaceCraft : Transform;
+var Player : Transform;
 function OnNetworkLoadedLevel () {
  // Instantiating SpaceCraft when Network is loaded
- Network.Instantiate(SpaceCraft, transform.position, transform.rotation, 0);
+ Network.Instantiate(Player, transform.position, transform.rotation, 0);
 }
 function OnPlayerDisconnected (player : NetworkPlayer) {
  // Removing player if Network is disconnected

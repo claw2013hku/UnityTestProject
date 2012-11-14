@@ -1,6 +1,5 @@
 #pragma strict
 var launcher : GameObject;
-var mainCamera : GameObject;
 function OnNetworkInstantiate (msg : NetworkMessageInfo) {
 	Debug.Log("onnetworkinstantiate");
 	if (networkView.isMine) 
@@ -8,7 +7,7 @@ function OnNetworkInstantiate (msg : NetworkMessageInfo) {
 		var _NetworkRigidbody : NetworkTransform = 
 		GetComponent("NetworkTransform");
 		_NetworkRigidbody.enabled = false;
-		mainCamera = GameObject.FindWithTag("MainCamera");
+		var mainCamera = GameObject.FindWithTag("MainCamera");
 		if(mainCamera == null){
 			Debug.Log("not found");
 		}
