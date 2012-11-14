@@ -7,6 +7,9 @@ function OnNetworkInstantiate (msg : NetworkMessageInfo) {
 		var _NetworkRigidbody : NetworkTransform = 
 		GetComponent("NetworkTransform");
 		_NetworkRigidbody.enabled = false;
+		var _NetworkAnimation : NetworkAnimation = 
+		GetComponent("NetworkAnimation");
+		_NetworkAnimation.enabled = false;
 		var mainCamera = GameObject.FindWithTag("MainCamera");
 		if(mainCamera == null){
 			Debug.Log("not found");
@@ -34,6 +37,10 @@ function OnNetworkInstantiate (msg : NetworkMessageInfo) {
 		var _NetworkRigidbody2 : NetworkTransform = 
 		GetComponent("NetworkTransform");
 		_NetworkRigidbody2.enabled = true;  
+		var _NetworkAnimation2 : NetworkAnimation = 
+		GetComponent("NetworkAnimation");
+		_NetworkAnimation2.enabled = true; 
+		
 		gameObject.tag = "RemotePlayer";
 	   	Debug.Log("assigned remote player");
 	}

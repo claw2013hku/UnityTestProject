@@ -48,6 +48,7 @@
      <Compile Include="Assets\Plugins\CameraMode.cs" />
      <Compile Include="Assets\Plugins\ControlSchemeInterface.cs" />
      <Compile Include="Assets\Plugins\GameCamera.cs" />
+     <Compile Include="Assets\Plugins\NetworkAnimation.cs" />
      <Compile Include="Assets\Plugins\NetworkRigidbody.cs" />
      <Compile Include="Assets\Plugins\NetworkTransform.cs" />
      <Compile Include="Assets\Plugins\NewCoconutThrower.cs" />

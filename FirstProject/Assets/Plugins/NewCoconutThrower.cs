@@ -17,7 +17,7 @@ public class NewCoconutThrower : MonoBehaviour {
 	void Update () {
 		if(ControlSchemeInterface.instance.GetAxis(ControlAxis.THROW) == 1.0f /*&& canThrow*/){
 			audio.PlayOneShot(throwSound);	
-			Rigidbody newCoconut = Instantiate(coconutPrefab, transform.position, transform.rotation) as Rigidbody;
+			Rigidbody newCoconut = Network.Instantiate(coconutPrefab, transform.position, transform.rotation, 0) as Rigidbody;
 			newCoconut.name = "coconut";
 			if(newCoconut.rigidbody == null){
 				newCoconut.gameObject.AddComponent<Rigidbody>();

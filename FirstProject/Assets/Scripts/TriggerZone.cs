@@ -35,7 +35,7 @@ public class TriggerZone : MonoBehaviour {
 	}
 	
 	void OnTriggerStay(Collider col){
-		if(col.gameObject.tag == "Player"){
+		if(col.gameObject.tag == "Player" || col.gameObject.tag == "RemotePlayer"){
 			transform.FindChild("door").SendMessage("DoorCheck");	
 			if(GameObject.Find ("PowerGUI")){
 				Destroy(GameObject.Find("PowerGUI"));

@@ -16,7 +16,7 @@ public class ThirdPersonTouchController : MonoBehaviour {
 	
 	private Animation _animation;
 	
-	enum CharacterState {
+	public enum CharacterState {
 		Idle = 0,
 		Walking = 1,
 		Trotting = 2,
@@ -443,5 +443,14 @@ public class ThirdPersonTouchController : MonoBehaviour {
 	public void Reset ()
 	{
 		gameObject.tag = "Player";
+	}
+	
+	public ThirdPersonTouchController.CharacterState GetState(){
+		return _characterState;	
+	}
+	
+	public float GetVelocityMagnitude(){
+		CharacterController controller = GetComponent<CharacterController>();
+		return controller.velocity.magnitude;
 	}
 }
