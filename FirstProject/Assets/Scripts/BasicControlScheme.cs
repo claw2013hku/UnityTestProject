@@ -18,6 +18,9 @@ public class BasicControlScheme : ControlSchemeInterface {
 	public float axis_raw_x = 0f;
 	public float axis_raw_y = 0f;
 	
+	public Vector2 joystickAtEdgeOffset = new Vector2(0.1f, 0.05f);
+	public Vector2 joystickAtEdgePlusDelta = new Vector2(1f, 1f);
+	
 	// Use this for initialization
 	void Start () {
 		ControlSchemeInterface.instance = this;
@@ -54,16 +57,21 @@ public class BasicControlScheme : ControlSchemeInterface {
 				if(windowPad.GetDeltaPositions().Count == 1){
 					value += windowPad.GetAnyDeltaPositions().x;
 				}
+				if(aimJoystick.joystickAtEdge.x == 1.0f){
+					value += aimJoystick.position.x * aimJoystickSensitivity.x;
+				}
 //				else
 //					return aimJoystick.position.x * aimJoystickSensitivity.x + aimJoystick.positionDelta.x * aimJoystickDeltaSensitivity.x;
-				value += aimJoystick.position.x * aimJoystickSensitivity.x;
+				
 				return value;
 			case ControlAxis.CAMERA_SCROLL_Y:
 				float value2 = 0f;
 				if(windowPad.GetDeltaPositions().Count == 1){
 					value2 += windowPad.GetAnyDeltaPositions().y;
 				}
-				value2 += aimJoystick.position.y * aimJoystickSensitivity.y;
+				if(aimJoystick.joystickAtEdge.y == 1.0f){
+					value2 += aimJoystick.position.y * aimJoystickSensitivity.y;
+				}
 				return value2;
 //				else
 //					return aimJoystick.position.y * aimJoystickSensitivity.y + aimJoystick.positionDelta.y * aimJoystickDeltaSensitivity.y;

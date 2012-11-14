@@ -16,7 +16,7 @@ public class ThrowTrigger : MonoBehaviour {
 	
 	void OnTriggerEnter(Collider col){
 		if(col.gameObject.tag == "Player"){
-			crosshair.enabled = true;
+			//crosshair.enabled = true;
 			CoconutThrower.canThrow = true;
 			if(!CoconutWin.haveWon){
 				textHints.SendMessage("ShowHint",
@@ -27,7 +27,7 @@ public class ThrowTrigger : MonoBehaviour {
 	
 	void OnTriggerExit(Collider col){
 		if(col.gameObject.tag == "Player"){
-			crosshair.enabled = false;
+			//crosshair.enabled = false;
 			CoconutThrower.canThrow = false;	
 		}
 	}

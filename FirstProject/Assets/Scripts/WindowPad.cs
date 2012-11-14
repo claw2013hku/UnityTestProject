@@ -25,6 +25,9 @@ public class WindowPad : MonoBehaviour {
 	public float sensitivityX = 1f;
 	public float sensitivityY = 1f;
 	
+	public bool smoothOutput = true;
+	public float smoothFactor = 0.3f;
+	
 	// Use this for initialization
 	void Start () {
 		hitWindow = new Rect(
@@ -63,17 +66,28 @@ public class WindowPad : MonoBehaviour {
 	public bool Poll(Touch touch){
 		bool hasPolled = false;
 		//Debug.Log("hitWindow : " + hitWindow + " touch.position: " + touch.position);
-		if(hitWindow.Contains(touch.position) && !fingerIds.Contains(touch.fingerId)){
+		if(hitWindow.Contains(touch.position) && !fingerIds.Contains(touch.fingerId) && touch.phase == TouchPhase.Began){
 			hasPolled = true;
 			fingerIds.Add(touch.fingerId);
-			deltaFingerPositions.Add (touch.fingerId, Vector2.zero);
+			deltaFingerPositions.Add (touch.fingerId, new Vector2());
 			currentFingerPositions.Add (touch.fingerId, new Vector2(touch.position.x, touch.position.y));
 			lastFingerPositions.Add (touch.fingerId, new Vector2(touch.position.x, touch.position.y));
 			fingerEnterTimes.Add (touch.fingerId, Time.time);
 		}
-		if(fingerIds.Contains(touch.fingerId)){
+		else if(fingerIds.Contains(touch.fingerId)){
 			hasPolled = true;
-			deltaFingerPositions[touch.fingerId] = new Vector2(touch.deltaPosition.x * sensitivityX * Screen.width, touch.deltaPosition.y * sensitivityY * Screen.height);
+			Vector2 v;
+			v.x = touch.deltaPosition.x * sensitivityX / (0.01f * Screen.width);
+			v.y = touch.deltaPosition.y * sensitivityY / (0.01f * Screen.height);
+			if(smoothOutput){
+				float oldX = deltaFingerPositions[touch.fingerId].x;
+				float oldY = deltaFingerPositions[touch.fingerId].y;
+				float refX = 0;
+				float refY = 0;
+				v.x = Mathf.SmoothDamp(oldX, v.x, ref refX, smoothFactor);
+				v.y = Mathf.SmoothDamp(oldY, v.y, ref refY, smoothFactor);
+			}
+			deltaFingerPositions[touch.fingerId] = v;
 			//Debug.Log("deltaFingerPositions[touch.fingerId] : " + deltaFingerPositions[touch.fingerId]);
 			if(touch.phase == TouchPhase.Canceled || 
 				touch.phase == TouchPhase.Ended){
@@ -109,7 +123,12 @@ public class WindowPad : MonoBehaviour {
 	}
 	
 	public Vector2 GetAnyDeltaPositions(){
-		return deltaFingerPositions[fingerIds[0]];
+		if(deltaFingerPositions.Count > 0){
+			return deltaFingerPositions[fingerIds[0]];
+		}
+		else{
+			return Vector2.zero;	
+		}
 	}
 	
 	public List<int> GetFingerIds(){

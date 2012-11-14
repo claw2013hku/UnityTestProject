@@ -66,9 +66,11 @@ public class CameraMode : MonoBehaviour {
 				}
 				break;
 		}
-		if(transitioning && transitionTime != 0f){
-			transform.position = Vector3.Slerp(transPos, newPosition, transTimer / transitionTime);
-			transform.rotation = Quaternion.Slerp(transRot, newRotation, transTimer / transitionTime);
+		if(transitioning){
+			if(transitionTime != 0f){
+				transform.position = Vector3.Slerp(transPos, newPosition, transTimer / transitionTime);
+				transform.rotation = Quaternion.Slerp(transRot, newRotation, transTimer / transitionTime);
+			}
 			transTimer += Time.deltaTime;
 			if(transTimer >= transitionTime){
 				transitioning = false;	

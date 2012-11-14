@@ -42,6 +42,8 @@ public class GameCamera : MonoBehaviour {
 	private bool dontClampXRot = false;
 	private bool dontClampHeight = false;
 	
+	public bool allowMouseInput = false;
+	
 	// Use this for initialization
 	void Start () {
 		// Add player's own layer to mask
@@ -96,7 +98,12 @@ public class GameCamera : MonoBehaviour {
 		Quaternion direction = Quaternion.LookRotation(offsetToCamera, Vector3.up);
 		Quaternion newDirection;
 		float xRot = direction.eulerAngles.x > 180 ? direction.eulerAngles.x - 360 : direction.eulerAngles.x;
-		xRot += -(ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_Y) + Input.GetAxisRaw("Mouse Y")) * mouseSensitivity * verticalAimingSpeed;
+		if(allowMouseInput){
+			xRot += -(ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_Y) + Input.GetAxisRaw("Mouse Y")) * mouseSensitivity * verticalAimingSpeed;
+		}
+		else{
+			xRot += -(ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_Y)) * mouseSensitivity * verticalAimingSpeed;
+		}	
 		float unclampedXRot = xRot;
 		xRot = Mathf.Clamp(xRot, minVerticalAngle, maxVerticalAngle);
 		if(dontClampXRot && xRot == unclampedXRot){
@@ -109,7 +116,12 @@ public class GameCamera : MonoBehaviour {
 		xRot = xRot < 0 ? 360 + xRot : xRot;
 		float yRot = direction.eulerAngles.y;
 //		Debug.Log ("xRot: " + xRot);
-		yRot += (ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_X) + Input.GetAxisRaw("Mouse X")) * mouseSensitivity * horizontalAimingSpeed;
+		if(allowMouseInput){
+			yRot += (ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_X) + Input.GetAxisRaw("Mouse X")) * mouseSensitivity * horizontalAimingSpeed;
+		}
+		else{
+			yRot += (ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_X)) * mouseSensitivity * horizontalAimingSpeed;
+		}
 		newDirection = 
 			Quaternion.Euler(
 				xRot, 

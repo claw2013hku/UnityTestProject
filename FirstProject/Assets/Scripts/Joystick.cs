@@ -14,14 +14,18 @@ public class Joystick : MonoBehaviour {
 	private int lastFingerId = -1;
 	
 	public Vector2 position = Vector2.zero;
-	public Vector2 positionDelta = Vector2.zero;
-	private Vector2 lastPosition = Vector2.zero;
 	public Vector2 deadZone = Vector2.zero;
 	public int tapCount;
 	public bool normalize;
 	public bool autoPolling;
 	public bool isJustDown = false;
 	public bool isJustUp = false;
+	
+	public bool joystickAtEdgeCompensate = true;
+	public Vector2 joystickAtEdgeOffset = new Vector2(0.1f, 0.05f);
+	public Vector2 realNormalizedPosition = Vector2.zero;
+	public bool realPositionValid = false;
+	public Vector2 joystickAtEdge = Vector2.zero;
 	
 	static Joystick[] joysticks;
 	static private bool enumeratedJoysticks = false;
@@ -85,34 +89,45 @@ public class Joystick : MonoBehaviour {
 				Poll(Input.GetTouch(i));
 			}
 		}
+		bool xAtEdge = false;
+		bool yAtEdge = false;
+		joystickAtEdge.x = 0f;
+		joystickAtEdge.y = 0f;
+		if(joystickAtEdgeCompensate && realPositionValid){
+			if(realNormalizedPosition.x < joystickAtEdgeOffset.x || 1 - joystickAtEdgeOffset.x < realNormalizedPosition.x){
+				xAtEdge = true;
+				position.x = realNormalizedPosition.x < joystickAtEdgeOffset.x ? -1f : 1f;
+				joystickAtEdge.x = 1.0f;
+			}
+			
+			if(realNormalizedPosition.y < joystickAtEdgeOffset.y || 1 - joystickAtEdgeOffset.y < realNormalizedPosition.y){
+				yAtEdge = true;
+				position.y = realNormalizedPosition.y < joystickAtEdgeOffset.y ? -1f : 1f;
+				joystickAtEdge.y = 1.0f;
+			}
+		}
 		
-		position.x = (gui.pixelInset.x + guiTouchOffset.x - guiCenter.x) / guiTouchOffset.x;
-		position.y = (gui.pixelInset.y + guiTouchOffset.y - guiCenter.y) / guiTouchOffset.y;
-		float absoluteX = Mathf.Abs(position.x);
-		float absoluteY = Mathf.Abs(position.y);
+		if(!xAtEdge){
+			position.x = (gui.pixelInset.x + guiTouchOffset.x - guiCenter.x) / guiTouchOffset.x;
+			float absoluteX = Mathf.Abs(position.x);
+			if(absoluteX < deadZone.x){
+				position.x = 0;	
+			}
+			else if (normalize){
+				position.x = Mathf.Sign(position.x) * (absoluteX - deadZone.x) / (1 - deadZone.x);
+			}
+		}
 		
-		if(absoluteX < deadZone.x){
-			position.x = 0;	
+		if(!yAtEdge){
+			position.y = (gui.pixelInset.y + guiTouchOffset.y - guiCenter.y) / guiTouchOffset.y;
+			float absoluteY = Mathf.Abs(position.y);
+			if(absoluteY < deadZone.y){
+				position.y = 0;	
+			}
+			else if(normalize){
+				position.y = Mathf.Sign(position.y) * (absoluteY - deadZone.y) / (1 - deadZone.y);	
+			}
 		}
-		else if (normalize){
-			position.x = Mathf.Sign(position.x) * (absoluteX - deadZone.x) / (1 - deadZone.x);
-		}
-		
-		if(absoluteY < deadZone.y){
-			position.y = 0;	
-		}
-		else if(normalize){
-			position.y = Mathf.Sign(position.y) * (absoluteY - deadZone.y) / (1 - deadZone.y);	
-		}
-//		if(isJustDown){
-//			Debug.Log("IsJustDown()");
-//		}
-//		if(isJustUp){
-//			Debug.Log("IsJustUp()");
-//		}
-		//Debug.Log("IsJustDown() : " + IsJustDown() + " IsJustUp() : " + IsJustUp());
-		positionDelta = position - lastPosition;
-		lastPosition = position;
 	}
 	
 	void LatchedFinger(int fingerId){
@@ -140,7 +155,7 @@ public class Joystick : MonoBehaviour {
 		bool hasPolled = false;
 		// account for the offset in our calculations
 		if(gui.HitTest(touch.position) && 
-			lastFingerId == -1){
+			lastFingerId == -1 && touch.phase == TouchPhase.Began){
 			lastFingerId = touch.fingerId;
 			
 			hasPolled = true;
@@ -158,7 +173,9 @@ public class Joystick : MonoBehaviour {
 				}
 			}
 			//Debug.Log("IsJustDown");
+			realNormalizedPosition = new Vector2(touch.position.x / Screen.width, touch.position.y / Screen.height);
 			isJustDown = true;
+			realPositionValid = true;
 		}
 		else if(lastFingerId == touch.fingerId){
 //					if(touch.tapCount > tapCount){
@@ -177,7 +194,9 @@ public class Joystick : MonoBehaviour {
 				Reset ();	
 				//Debug.Log("IsJustUp");
 				isJustUp = true;
+				realPositionValid = false;
 			}
+			realNormalizedPosition = new Vector2(touch.position.x / Screen.width, touch.position.y / Screen.height);
 		}
 		return hasPolled;
 	}

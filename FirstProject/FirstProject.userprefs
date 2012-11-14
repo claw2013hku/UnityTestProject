@@ -1,10 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\TestSpawner.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="..\..\..\UnityTes\UnityTestProject-7afe717a917011a6b86f424723ceb715a0c7ffc4\FirstProject\Assets\Plugins\GameCamera.cs">
     <Files>
-      <File FileName="Assets\Scripts\BasicControlScheme.cs" Line="37" Column="4" />
-      <File FileName="Assets\Scripts\TestSpawner.cs" Line="15" Column="2" />
-      <File FileName="Assets\Scripts\RigidAssign.js" Line="8" Column="3" />
+      <File FileName="..\..\..\UnityTes\UnityTestProject-7afe717a917011a6b86f424723ceb715a0c7ffc4\FirstProject\Assets\Scripts\CameraMode.cs" Line="24" Column="17" />
+      <File FileName="..\..\..\UnityTes\UnityTestProject-7afe717a917011a6b86f424723ceb715a0c7ffc4\FirstProject\Assets\Plugins\GameCamera.cs" Line="88" Column="81" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
