@@ -27,6 +27,10 @@ public class NewCoconutThrower : MonoBehaviour {
 		}
 	}
 	
+	public void SetCamera(GameObject cam){
+		mainCamera = cam;	
+	}
+	
 //	void ShootCoconut(){
 //		audio.PlayOneShot(throwSound);	
 //		Rigidbody newCoconut = Instantiate(coconutPrefab, transform.position, transform.rotation) as Rigidbody;
