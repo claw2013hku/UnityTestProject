@@ -137,8 +137,8 @@ public class ThirdPersonTouchController : MonoBehaviour {
 		Vector3 right = new Vector3(forward.z, 0, -forward.x);
 	
 		
-		float v = ControlSchemeInterface.instance.GetAxis(ControlAxis.MOVE_Y) + Input.GetAxisRaw("Vertical");//ControlSchemeInterface.instance.GetAxis(ControlAxis.MOVE_Y);//Input.GetAxisRaw("Vertical");
-		float h = ControlSchemeInterface.instance.GetAxis(ControlAxis.MOVE_X) + Input.GetAxisRaw("Horizontal");//ControlSchemeInterface.instance.GetAxis(ControlAxis.MOVE_X);//Input.GetAxisRaw("Horizontal");
+		float v = ControlSchemeInterface.instance.GetAxis(ControlAxis.MOVE_Y);//ControlSchemeInterface.instance.GetAxis(ControlAxis.MOVE_Y);//Input.GetAxisRaw("Vertical");
+		float h = ControlSchemeInterface.instance.GetAxis(ControlAxis.MOVE_X);//ControlSchemeInterface.instance.GetAxis(ControlAxis.MOVE_X);//Input.GetAxisRaw("Horizontal");
 	
 		// Are we moving backwards or looking backwards
 		if (v < -0.2)

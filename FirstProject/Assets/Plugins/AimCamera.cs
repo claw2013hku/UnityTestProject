@@ -50,8 +50,8 @@ public class AimCamera : MonoBehaviour {
 		/*if (Time.deltaTime == 0 || Time.timeScale == 0 || player == null) 
 			return;*/
 		
-		angleH += Mathf.Clamp(ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_X) + Input.GetAxisRaw("Mouse X"), -1, 1) * horizontalAimingSpeed * Time.deltaTime;
-		angleV += Mathf.Clamp(ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_Y) + Input.GetAxisRaw("Mouse Y"), -1, 1) * verticalAimingSpeed * Time.deltaTime;
+		angleH += ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_X) * horizontalAimingSpeed * Time.deltaTime;;//Mathf.Clamp(ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_X), -1, 1) * horizontalAimingSpeed * Time.deltaTime;
+		angleV += ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_Y) * verticalAimingSpeed * Time.deltaTime;;//Mathf.Clamp(ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_Y), -1, 1) * verticalAimingSpeed * Time.deltaTime;
 		// limit vertical angle
 		angleV = Mathf.Clamp(angleV, minVerticalAngle, maxVerticalAngle);
 		

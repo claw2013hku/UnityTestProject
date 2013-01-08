@@ -8,6 +8,7 @@ public class BasicControlScheme : ControlSchemeInterface {
 	
 	public Vector2 aimJoystickDeltaSensitivity = new Vector2(1, 1);
 	public Vector2 aimJoystickSensitivity = new Vector2(1, 1);
+	public Vector2 mouseSenitivity = new Vector2(1,1);
 	
 	public float axis_throw = 0f;
 	public float axis_camera_scroll_x = 0f;
@@ -51,36 +52,57 @@ public class BasicControlScheme : ControlSchemeInterface {
 	override public float GetAxis(ControlAxis axis){
 		switch(axis){
 			case ControlAxis.THROW:
+#if UNITY_ANDROID || UNITY_IPHONE
 				return aimJoystick.IsJustUp() ? 1f : 0f;
+#else
+				return Input.GetButtonUp("Fire1")? 1f : 0f;
+#endif
 			case ControlAxis.CAMERA_SCROLL_X:
 				float value = 0f;
+#if UNITY_ANDROID || UNITY_IPHONE
 				if(windowPad.GetDeltaPositions().Count == 1){
 					value += windowPad.GetAnyDeltaPositions().x;
 				}
 				if(aimJoystick.joystickAtEdge.x == 1.0f){
 					value += aimJoystick.position.x * aimJoystickSensitivity.x;
 				}
-//				else
-//					return aimJoystick.position.x * aimJoystickSensitivity.x + aimJoystick.positionDelta.x * aimJoystickDeltaSensitivity.x;
-				
+#else
+				value = Input.GetAxis("Mouse X") * mouseSenitivity.x;
+#endif
 				return value;
+			
 			case ControlAxis.CAMERA_SCROLL_Y:
 				float value2 = 0f;
+#if UNITY_ANDROID || UNITY_IPHONE
 				if(windowPad.GetDeltaPositions().Count == 1){
 					value2 += windowPad.GetAnyDeltaPositions().y;
 				}
 				if(aimJoystick.joystickAtEdge.y == 1.0f){
 					value2 += aimJoystick.position.y * aimJoystickSensitivity.y;
 				}
+#else
+				value2 = Input.GetAxis("Mouse Y") * mouseSenitivity.y;
+#endif
 				return value2;
-//				else
-//					return aimJoystick.position.y * aimJoystickSensitivity.y + aimJoystick.positionDelta.y * aimJoystickDeltaSensitivity.y;
+
 			case ControlAxis.MOVE_X:
+#if UNITY_ANDROID || UNITY_IPHONE
 				return movementJoystick.position.x;
+#else
+				return Input.GetAxisRaw("Horizontal");
+#endif
 			case ControlAxis.MOVE_Y:
+#if UNITY_ANDROID || UNITY_IPHONE
 				return movementJoystick.position.y;
+#else
+				return Input.GetAxisRaw("Vertical");
+#endif
 			case ControlAxis.AIMING:
+#if UNITY_ANDROID || UNITY_IPHONE
 				return aimJoystick.IsDown() ? 1f : 0f;
+#else
+				return Input.GetButton("Fire1")? 1f : 0f;
+#endif
 		}
 		return 0f;
 	}
