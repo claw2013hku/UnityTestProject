@@ -34,6 +34,7 @@ public class AimCamera : MonoBehaviour {
 	void Start () {
 		// Add player's own layer to mask
 		mask = 1 << player.gameObject.layer;
+		mask |= ( 1 << LayerMask.NameToLayer("PlayerRagdoll"));
 		//mask |= LayerMask.NameToLayer("Player");
 		// Invert mask
 		mask = ~mask;
