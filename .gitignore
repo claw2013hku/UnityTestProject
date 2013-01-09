@@ -15,4 +15,4 @@ guidmapper/
 Temp/
 *.pidb
 build/
-Sample Assets/
+Sample Assets/*
