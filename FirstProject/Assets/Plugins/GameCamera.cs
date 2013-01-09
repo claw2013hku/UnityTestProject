@@ -163,7 +163,7 @@ public class GameCamera : MonoBehaviour {
 		Quaternion targetRotation = Quaternion.LookRotation(offsetToCamera, Vector3.up);
 	
 		//Freeze vertical rotation when jumping
-		if (controller.IsJumping()){
+		if (controller != null && controller.IsJumping()){
 			Debug.Log("not grounded");
 			targetRotation *= Quaternion.Inverse(Quaternion.Euler(direction.eulerAngles.x, 0, 0));
 			targetRotation *= Quaternion.Euler(rotation.eulerAngles.x, 0, 0);

@@ -18,4 +18,4 @@ public class ControlSchemeInterface : MonoBehaviour {
 	}
 }
 
-public enum ControlAxis{THROW, CAMERA_SCROLL_X, CAMERA_SCROLL_Y, MOVE_X, MOVE_Y, AIMING};
+public enum ControlAxis{THROW, CAMERA_SCROLL_X, CAMERA_SCROLL_Y, MOVE_X, MOVE_Y, AIMING, DEBUG};

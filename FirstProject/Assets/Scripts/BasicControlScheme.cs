@@ -103,6 +103,11 @@ public class BasicControlScheme : ControlSchemeInterface {
 #else
 				return Input.GetButton("Fire1")? 1f : 0f;
 #endif
+<<<<<<< HEAD
+=======
+			case ControlAxis.DEBUG:
+				return Input.GetButtonDown("Fire2")? 1f : 0f;
+>>>>>>> Updraded and merged with current progress in Unity 4
 		}
 		return 0f;
 	}

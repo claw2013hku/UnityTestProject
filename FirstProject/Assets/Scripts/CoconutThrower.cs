@@ -15,14 +15,15 @@ public class CoconutThrower : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetButtonDown("Fire1") /*&& canThrow*/){
+		if(ControlSchemeInterface.instance.GetAxis(ControlAxis.THROW) > 0f /*&& canThrow*/){
 			audio.PlayOneShot(throwSound);	
 			Rigidbody newCoconut = Instantiate(coconutPrefab, transform.position, transform.rotation) as Rigidbody;
 			newCoconut.name = "coconut";
 			if(newCoconut.rigidbody == null){
 				newCoconut.gameObject.AddComponent<Rigidbody>();
 			}
-			newCoconut.rigidbody.velocity = transform.forward * throwSpeed;
+			newCoconut.rigidbody.velocity = Camera.main.transform.forward * throwSpeed;
+			newCoconut.rotation = Quaternion.LookRotation(Camera.main.transform.forward);
 		}
 	}
 }
