@@ -1,22 +1,6 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-<<<<<<< HEAD
+  <MonoDevelop.Ide.Workspace />
   <MonoDevelop.Ide.Workbench />
-=======
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\test\projectileDemoSwitch.cs">
-    <Files>
-      <File FileName="Assets\Scripts\IdleRunJump.cs" Line="35" Column="14" />
-      <File FileName="Assets\Plugins\GameCamera.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\CoconutThrower.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\BasicControlScheme.cs" Line="1" Column="1" />
-      <File FileName="Assets\Plugins\ControlSchemeInterface.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\ProjectileAttacher.cs" Line="59" Column="25" />
-      <File FileName="Assets\Plugins\SimpleCamera.cs" Line="22" Column="3" />
-      <File FileName="Assets\Scripts\ProjectileReceiver.cs" Line="20" Column="53" />
-      <File FileName="Assets\test\projectileDemoSwitch.cs" Line="19" Column="33" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
->>>>>>> Updraded and merged with current progress in Unity 4
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

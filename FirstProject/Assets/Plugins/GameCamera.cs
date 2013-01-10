@@ -47,7 +47,7 @@ public class GameCamera : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		// Add player's own layer to mask
-		mask = 1 << player.gameObject.layer;
+		mask = 1 << LayerMask.NameToLayer("Player");
 		mask |= ( 1 << LayerMask.NameToLayer("Ignore Raycast"));
 		mask |= ( 1 << LayerMask.NameToLayer("PlayerRagdoll"));
 		// Invert mask
