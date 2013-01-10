@@ -1,18 +1,24 @@
 fileFormatVersion: 2
-guid: fc6c98e057d46f943842f7ffcdab4b9f
+guid: 32f80482931c88643b93c37a214a6901
 ModelImporter:
   serializedVersion: 15
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
+    100000: Bridge
+    100002: Camera
+    100004: Lamp
+    100006: //RootNode
+    400000: Bridge
+    400002: Camera
+    400004: Lamp
+    400006: //RootNode
+    2300000: Bridge
+    3300000: Bridge
     4300000: Bridge
     7400000: Default Take
     9500000: //RootNode
   materials:
     importMaterials: 1
-    materialName: 1
+    materialName: 0
     materialSearch: 1
   animations:
     legacyGenerateAnimations: 4
@@ -29,7 +35,7 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
-    swapUVChannels: 1
+    swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
