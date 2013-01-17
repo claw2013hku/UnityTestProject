@@ -19,7 +19,17 @@ function OnGUI () {
 	// When network is running (server or client) then display the level "StarTrooper"
 	if (Network.peerType != NetworkPeerType.Disconnected)
 	{
-		if (GUI.Button(new Rect(350,10,100,30),"NetworkMenu"))	
+		if (GUI.Button(new Rect(350,10,100,30),"siege"))	
+		{
+			// Make sure no old RPC calls are buffered and then send load level command
+			Network.RemoveRPCsInGroup(0);
+			Network.RemoveRPCsInGroup(1);
+			// Load level with incremented level prefix (for view IDs)
+			networkView.RPC( "LoadLevel", RPCMode.AllBuffered, "Siege_battlefield_river_remote",
+			lastLevelPrefix + 1);
+		}
+		
+		if (GUI.Button(new Rect(350,40,100,30),"house"))	
 		{
 			// Make sure no old RPC calls are buffered and then send load level command
 			Network.RemoveRPCsInGroup(0);

@@ -33,7 +33,9 @@ public class TurnRagdoll : MonoBehaviour {
 		if(timer > time && !pendingRestart){
 			//Destroy((CharacterController)character);
 			Destroy(GetComponent<Animator>());
-			Destroy(character);
+			GetComponent<CharacterController>().enabled = false;
+			Destroy(GetComponent<CharacterController>());
+			
 			for(int i = 0; i < ragdollParts.Length; i++){
 				Collider part = ragdollParts[i];
 				part.enabled = true;

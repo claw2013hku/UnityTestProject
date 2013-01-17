@@ -135,7 +135,6 @@ public class ThirdPersonTouchController : MonoBehaviour {
 		// Right vector relative to the camera
 		// Always orthogonal to the forward vector
 		Vector3 right = new Vector3(forward.z, 0, -forward.x);
-	
 		
 		float v = ControlSchemeInterface.instance.GetAxis(ControlAxis.MOVE_Y);//ControlSchemeInterface.instance.GetAxis(ControlAxis.MOVE_Y);//Input.GetAxisRaw("Vertical");
 		float h = ControlSchemeInterface.instance.GetAxis(ControlAxis.MOVE_X);//ControlSchemeInterface.instance.GetAxis(ControlAxis.MOVE_X);//Input.GetAxisRaw("Horizontal");
@@ -222,10 +221,7 @@ public class ThirdPersonTouchController : MonoBehaviour {
 	
 			if (isMoving)
 				inAirVelocity += targetDirection.normalized * Time.deltaTime * inAirControlAcceleration;
-		}
-		
-	
-			
+		}	
 	}
 	
 	

@@ -3,7 +3,6 @@ using System.Collections;
 
 public class IdleRunJump : MonoBehaviour {
 
-
 	protected Animator animator;
 	public float DirectionDampTime = .25f;
 	public bool ApplyGravity = true; 
