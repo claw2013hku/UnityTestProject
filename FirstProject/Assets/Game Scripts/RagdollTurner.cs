@@ -5,6 +5,8 @@ public class RagdollTurner : MonoBehaviour {
 	private ArrayList velocities;
 	private ArrayList positions;
 	private Rigidbody[] ragdollBodies;
+	private ArrayList localPositions;
+	private ArrayList localRotations;
 	
 	private Animator charAnimator;
 	private CharacterController charController;
@@ -37,12 +39,18 @@ public class RagdollTurner : MonoBehaviour {
 		ragdollBodies = GetComponentsInChildren<Rigidbody>();
 		velocities = new ArrayList(ragdollBodies.Length);
 		positions = new ArrayList(ragdollBodies.Length);
+		localPositions = new ArrayList(ragdollBodies.Length);
+		localRotations = new ArrayList(ragdollBodies.Length);
 		for(int i = 0; i < ragdollBodies.Length; i++){
 			velocities.Add(new Vector3());
 			positions.Add (new Vector3());
+			localPositions.Add(new Vector3());
+			localRotations.Add(new Quaternion());
 			Vector3 newPosition = ragdollBodies[i].transform.position;
 			velocities[i] = 0;
 			positions[i] = newPosition;
+			localPositions[i] = ragdollBodies[i].transform.localPosition;
+			localRotations[i] = ragdollBodies[i].transform.localRotation;
 		}
 		
 		charAnimator = GetComponent<Animator>();
@@ -155,6 +163,8 @@ public class RagdollTurner : MonoBehaviour {
 		charController.enabled = true;
 		for(int i = 0; i < ragdollBodies.Length; i++){
 			((Rigidbody)(ragdollBodies[i])).isKinematic = true;
+			((Rigidbody)(ragdollBodies[i])).transform.localPosition = (Vector3)localPositions[i];
+			((Rigidbody)(ragdollBodies[i])).transform.localRotation = (Quaternion)localRotations[i];
 		}
 		finishedTurningRagdoll = false;
 	}

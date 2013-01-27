@@ -14,6 +14,9 @@ private var timer : float = 0.0;
 private var windowRect = Rect (Screen.width-300,0,300,100);
 private var hideTest = false;
 private var testMessage = "Undetermined NAT capabilities";
+var testStatus = "Testing network connection capabilities.";
+var shouldEnableNatMessage : String = "";
+
 // Enable this if not running a client on the server machine
 // MasterServer.dedicatedServer = true;
 function OnFailedToConnectToMasterServer(info: NetworkConnectionError) {
@@ -34,10 +37,19 @@ function OnFailedToConnect(info: NetworkConnectionError) {
 }
 function OnGUI () {
 	ShowGUI();
+	GUILayout.BeginArea(new Rect(0,100,300,300));
+	GUILayout.Label("Current Status: " + testStatus);
+    GUILayout.Label("Test result : " + testMessage);
+    GUILayout.Label(shouldEnableNatMessage);
+    if (!doneTesting && Network.isServer)
+        TestConnection();
+    GUILayout.EndArea();
+
 }
 function Awake () {
 	// Start connection test
-	natCapable = Network.TestConnection();
+	//natCapable = Network.TestConnection();
+	Debug.Log(Network.InitializeServer(32, serverPort, !Network.HavePublicAddress()));
 	// What kind of IP does this machine have? TestConnection also indicates this in the
 	// test results
 	if (Network.HavePublicAddress())
@@ -106,6 +118,10 @@ function TestConnection() {
 		default:
 			testMessage = "Error in test routine, got " + natCapable;
 	}
+	if(doneTesting){
+		Network.Disconnect();
+    	Debug.Log("Closing Test Server");
+	}
 }
 function ShowGUI() {
 	if (GUI.Button (new Rect(100,10,120,30),"Retest connection"))
@@ -115,14 +131,17 @@ function ShowGUI() {
 		doneTesting = false;
 		natCapable = Network.TestConnection(true);
 	}
+	if(!doneTesting) return;
 	if (Network.peerType == NetworkPeerType.Disconnected)
 	{
 	// Start a new server
 		if (GUI.Button(new Rect(10,10,90,30),"Start Server"))
 		{
-			Network.InitializeServer(32, serverPort);
-			MasterServer.updateRate = 3;
-			MasterServer.RegisterHost(gameName, "stuff", "profas chat test");
+			//if(doneTesting && !Network.isServer){
+				Network.InitializeServer(32, serverPort, !Network.HavePublicAddress());
+				MasterServer.updateRate = 3;
+				MasterServer.RegisterHost(gameName, "stuff", "profas chat test");
+			//}
 		}
 		// Refresh hosts
 		if (GUI.Button(new Rect(10,40,210,30),"Refresh available Servers")|| Time.realtimeSinceStartup > lastHostListRequest + hostListRefreshTimeout)
@@ -175,3 +194,120 @@ function ShowGUI() {
 		}
 	}
 }
+
+/*
+#pragma strict
+var timer = 0;
+var testStatus = "Testing network connection capabilities.";
+var testMessage = "Test in progress";
+var shouldEnableNatMessage : String = "";
+var doneTesting = false;
+var probingPublicIP = false;
+var serverPort = 9999;
+var connectionTestResult = ConnectionTesterStatus.Undetermined;
+
+// Indicates if the useNat parameter be enabled when starting a server
+var useNat = false;
+
+function Start(){
+	Debug.Log(Network.InitializeServer(32, 25002, !Network.HavePublicAddress()));
+}
+
+function OnGUI() {
+    GUILayout.Label("Current Status: " + testStatus);
+    GUILayout.Label("Test result : " + testMessage);
+    GUILayout.Label(shouldEnableNatMessage);
+    if (!doneTesting && Network.isServer)
+        TestConnection();
+    if (doneTesting && Network.isServer){
+    	Network.Disconnect();
+    	Debug.Log("Closing Test Server");
+    }
+}
+
+function TestConnection() {
+    // Start/Poll the connection test, report the results in a label and 
+    // react to the results accordingly
+    connectionTestResult = Network.TestConnection();
+    switch (connectionTestResult) {
+        case ConnectionTesterStatus.Error: 
+            testMessage = "Problem determining NAT capabilities";
+            doneTesting = true;
+            break;
+            
+        case ConnectionTesterStatus.Undetermined: 
+            testMessage = "Undetermined NAT capabilities";
+            doneTesting = false;
+            break;
+                        
+        case ConnectionTesterStatus.PublicIPIsConnectable:
+            testMessage = "Directly connectable public IP address.";
+            useNat = false;
+            doneTesting = true;
+            break;
+            
+        // This case is a bit special as we now need to check if we can 
+        // circumvent the blocking by using NAT punchthrough
+        case ConnectionTesterStatus.PublicIPPortBlocked:
+            testMessage = "Non-connectable public IP address (port " +
+                serverPort +" blocked), running a server is impossible.";
+            useNat = false;
+            // If no NAT punchthrough test has been performed on this public 
+            // IP, force a test
+            if (!probingPublicIP) {
+                connectionTestResult = Network.TestConnectionNAT();
+                probingPublicIP = true;
+                testStatus = "Testing if blocked public IP can be circumvented";
+                timer = Time.time + 10;
+            }
+            // NAT punchthrough test was performed but we still get blocked
+            else if (Time.time > timer) {
+                probingPublicIP = false;         // reset
+                useNat = true;
+                doneTesting = true;
+            }
+            break;
+        case ConnectionTesterStatus.PublicIPNoServerStarted:
+            testMessage = "Public IP address but server not initialized, "+
+                "it must be started to check server accessibility. Restart "+
+                "connection test when ready.";
+            break;
+                        
+        case ConnectionTesterStatus.LimitedNATPunchthroughPortRestricted:
+            testMessage = "Limited NAT punchthrough capabilities. Cannot "+
+                "connect to all types of NAT servers. Running a server "+
+                "is ill advised as not everyone can connect.";
+            useNat = true;
+            doneTesting = true;
+            break;
+            
+        case ConnectionTesterStatus.LimitedNATPunchthroughSymmetric:
+            testMessage = "Limited NAT punchthrough capabilities. Cannot "+
+                "connect to all types of NAT servers. Running a server "+
+                "is ill advised as not everyone can connect.";
+            useNat = true;
+            doneTesting = true;
+            break;
+        
+        case ConnectionTesterStatus.NATpunchthroughAddressRestrictedCone:
+        case ConnectionTesterStatus.NATpunchthroughFullCone:
+            testMessage = "NAT punchthrough capable. Can connect to all "+
+                "servers and receive connections from all clients. Enabling "+
+                "NAT punchthrough functionality.";
+            useNat = true;
+            doneTesting = true;
+            break;
+
+        default: 
+            testMessage = "Error in test routine, got " + connectionTestResult;
+    }
+    if (doneTesting) {
+        if (useNat)
+            shouldEnableNatMessage = "When starting a server the NAT "+
+                "punchthrough feature should be enabled (useNat parameter)";
+        else
+            shouldEnableNatMessage = "NAT punchthrough not needed";
+        testStatus = "Done testing";
+    }
+}
+*/
