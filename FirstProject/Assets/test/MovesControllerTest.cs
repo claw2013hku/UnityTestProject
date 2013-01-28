@@ -67,7 +67,7 @@ public class MovesControllerTest : MonoBehaviour {
 				animator.SetInteger("SlashVariant", 0);
 			}
 			if(swinging){
-				Debug.Log ("swinging:" + swinging);
+//				Debug.Log ("swinging:" + swinging);
 			}
 		}
 	}

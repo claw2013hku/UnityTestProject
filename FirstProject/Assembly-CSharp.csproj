@@ -18,7 +18,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_WEBPLAYER;WEBPLUG;ENABLE_MICROPHONE;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;ENABLE_AUDIO_FMOD;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PHYSICS;ENABLE_TERRAIN;ENABLE_CACHING;ENABLE_SUBSTANCE;ENABLE_GENERICS;ENABLE_CLOTH;ENABLE_MOVIES;ENABLE_AUDIO;ENABLE_WWW;ENABLE_SHADOWS;ENABLE_DUCK_TYPING;UNITY_4_0_0;UNITY_4_0;ENABLE_PROFILER;UNITY_EDITOR;UNITY_TEAM_LICENSE</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE;ENABLE_MICROPHONE;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;ENABLE_AUDIO_FMOD;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PHYSICS;ENABLE_TERRAIN;ENABLE_CACHING;ENABLE_SUBSTANCE;ENABLE_GENERICS;ENABLE_CLOTH;ENABLE_MOVIES;ENABLE_AUDIO;ENABLE_WWW;ENABLE_SHADOWS;ENABLE_DUCK_TYPING;UNITY_4_0_0;UNITY_4_0;UNITY_STANDALONE_WIN;ENABLE_PROFILER;UNITY_EDITOR;UNITY_TEAM_LICENSE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -111,6 +111,22 @@
      <Compile Include="Assets\test\TestCharacterMotor.cs" />
      <Compile Include="Assets\test\projectileDemoSwitch.cs" />
      <Compile Include="Assets\test\runTest.cs" />
+     <Compile Include="Assets\test\sfs\Lobby\Scripts\ChatWindow.cs" />
+     <Compile Include="Assets\test\sfs\Lobby\Scripts\LobbyGUI.cs" />
+     <Compile Include="Assets\test\sfs\Lobby\Scripts\LoginGUI.cs" />
+     <Compile Include="Assets\test\sfs\Lobby\Scripts\SmartFoxConnection.cs" />
+     <Compile Include="Assets\test\sfsTest\Scripts\DeleteAfterSeconds.cs" />
+     <Compile Include="Assets\test\sfsTest\Scripts\NetworkTransform.cs" />
+     <Compile Include="Assets\test\sfsTest\Scripts\NetworkTransformInterpolation.cs" />
+     <Compile Include="Assets\test\sfsTest\Scripts\NetworkTransformReceiver.cs" />
+     <Compile Include="Assets\test\sfsTest\Scripts\NetworkTransformSender.cs" />
+     <Compile Include="Assets\test\sfsTest\Scripts\PingDisplay.cs" />
+     <Compile Include="Assets\test\sfsTest\Scripts\PlayerSpawner.cs" />
+     <Compile Include="Assets\test\sfsTest\Scripts\RemotePlayer.cs" />
+     <Compile Include="Assets\test\sfsTest\Scripts\RemotePlayerInfo.cs" />
+     <Compile Include="Assets\test\sfsTest\Scripts\SFSNetworkCharacterTest.cs" />
+     <Compile Include="Assets\test\sfsTest\Scripts\SFSNetworkManager.cs" />
+     <Compile Include="Assets\test\sfsTest\Scripts\TimeManager.cs" />
      <Compile Include="Assets\test\touchExplosionTest.cs" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\NoiseEffectShaderRGB.shader" />
@@ -181,6 +197,9 @@
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_Antialiasing\FXAAPreset2.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\BlurAndFlares.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\BlendForBloom.shader" />
+ <Reference Include="SmartFox2">
+ <HintPath>Assets\Plugins\SmartFox2.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">

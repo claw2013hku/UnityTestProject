@@ -155,7 +155,6 @@ public class CameraMode : MonoBehaviour {
 
 	public void FocusTransform(GameObject focus){
 		focusObject = focus;
-		Debug.Log("Focus");
 		if(aimCamera != null){
 			aimCamera.player = focus.GetComponent<CameraFocus>().focus;
 		}
