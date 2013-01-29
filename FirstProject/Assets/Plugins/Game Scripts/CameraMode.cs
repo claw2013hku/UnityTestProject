@@ -159,8 +159,7 @@ public class CameraMode : MonoBehaviour {
 			aimCamera.player = focus.GetComponent<CameraFocus>().focus;
 		}
 		if(moveCamera != null){
-			moveCamera.player = focus.GetComponent<CameraFocus>().focus;
-			moveCamera.playerObj = focus;
+			moveCamera.focusTransform = focus.GetComponent<CameraFocus>().focus;
 		}
 	}
 }

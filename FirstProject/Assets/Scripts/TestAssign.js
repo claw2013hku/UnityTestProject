@@ -8,9 +8,8 @@ function Start () {
  	var aimCamera : AimCamera = mainCamera.GetComponent("AimCamera");
     aimCamera.player = transform;
  	var gameCamera : GameCamera = mainCamera.GetComponent("GameCamera");
-    gameCamera.player = transform;
-    gameCamera.playerObj = gameObject;
-  	gameObject.tag = "Player";
+    gameCamera.focusTransform = transform;
+    gameObject.tag = "Player";
 
 	var thrower : NewCoconutThrower = launcher.GetComponent("NewCoconutThrower");
 	thrower.enabled = true;

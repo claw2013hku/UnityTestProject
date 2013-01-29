@@ -20,8 +20,7 @@ function OnNetworkInstantiate (msg : NetworkMessageInfo) {
 		var aimCamera : AimCamera = mainCamera.GetComponent("AimCamera");
 		aimCamera.player = transform;
 		var gameCamera : GameCamera = mainCamera.GetComponent("GameCamera");
-		gameCamera.player = transform;
-		gameCamera.playerObj = gameObject;
+		gameCamera.focusTransform = transform;
 		Debug.Log("assigned local player");
 		gameObject.tag = "Player";
 	
