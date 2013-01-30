@@ -75,6 +75,7 @@ public class CameraMode : MonoBehaviour {
 				break;
 		}
 		if(transitioning){
+		Debug.Log("transitioning");
 			if(transitionTime != 0f){
 				transform.position = Vector3.Slerp(transPos, newPosition, transTimer / transitionTime);
 				transform.rotation = Quaternion.Slerp(transRot, newRotation, transTimer / transitionTime);

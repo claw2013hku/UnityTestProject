@@ -42,10 +42,10 @@ public class SpeedModifierTest : IActorStatusEffect {
 	
 	public override void OnApply(ActorStatus status){
 //		Debug.Log ("OnApply");
-		status.GetModifiers(ActorStatus.StatusType.MOVESPEED)[0] += plusModifier1;
-		status.GetModifiers(ActorStatus.StatusType.MOVESPEED)[1] *= mulModifier2;
-		status.GetModifiers(ActorStatus.StatusType.MOVESPEED)[2] += plusModifier3;
-		status.GetModifiers(ActorStatus.StatusType.MOVESPEED)[3] *= mulModifier4;
+		status.WriteStatus().MoveSpeedModifiers[0] += plusModifier1;
+		status.WriteStatus().MoveSpeedModifiers[1] *= mulModifier2;
+		status.WriteStatus().MoveSpeedModifiers[2] += plusModifier3;
+		status.WriteStatus().MoveSpeedModifiers[3] *= mulModifier4;
 //		Debug.Log (status.GetModifiers(ActorStatus.StatusType.MOVESPEED)[1]);
 	}
 	

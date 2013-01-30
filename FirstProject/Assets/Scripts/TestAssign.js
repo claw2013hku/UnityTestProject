@@ -2,8 +2,8 @@
 var launcher : GameObject;
 var mainCamera : GameObject;
 function Start () {
-	var _NetworkRigidbody : NetworkTransform = GetComponent("NetworkTransform");
-  	_NetworkRigidbody.enabled = false;
+//	var _NetworkRigidbody : NetworkTransform = GetComponent("NetworkTransform");
+//  	_NetworkRigidbody.enabled = false;
   	mainCamera = GameObject.FindWithTag("MainCamera");
  	var aimCamera : AimCamera = mainCamera.GetComponent("AimCamera");
     aimCamera.player = transform;

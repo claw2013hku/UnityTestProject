@@ -146,11 +146,11 @@ function Apply (dummyTarget : Transform, dummyCenter : Vector3)
 	
 	// Set the position of the camera on the x-z plane to:
 	// distance meters behind the target
-	/*cameraTransform.position = targetCenter;
+	cameraTransform.position = targetCenter;
 	cameraTransform.position += currentRotation * Vector3.back * distance;
 
 	// Set the height of the camera
-	cameraTransform.position.y = currentHeight;*/
+	cameraTransform.position.y = currentHeight;
 	
 	// Always look at the target	
 	SetUpRotation(targetCenter, targetHead);

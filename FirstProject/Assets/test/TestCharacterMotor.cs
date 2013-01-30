@@ -46,11 +46,6 @@ public class TestCharacterMotor: MonoBehaviour {
 			return;
 		}
 		
-		//also act as a run status effector
-		if(ControlSchemeInterface.instance.GetAxis(ControlAxis.RUN) > 0f){
-			status.GetModifiers(ActorStatus.StatusType.MOVESPEED)[0] += runSpeedModifier;	
-		}
-		
 		Vector3 motion = Vector3.zero;
 		
 		if(controllable){
@@ -73,16 +68,16 @@ public class TestCharacterMotor: MonoBehaviour {
 			if(IsGrounded()){
 				if(targetDirection.sqrMagnitude != 0 && (stateInfo.nameHash == idleAnimationNameHash || stateInfo.nameHash == runAnimationNameHash)){
 					animator.SetBool("Run", true);
-					motion += targetDirection.normalized * status.GetModifiedStatusf(ActorStatus.StatusType.MOVESPEED) * Time.deltaTime;
+					motion += targetDirection.normalized * status.ReadStatus.MoveSpeed * Time.deltaTime;
 					transform.rotation = Quaternion.LookRotation(targetDirection);
 				}
 			}
 		}
 		
 		//Debug.Log("MOtion0: " + motion);
-		motion *= status.motionModifier1m;
+		motion *= status.ReadStatus.MotionModifier1m;
 		//Debug.Log("MOtion1: " + motion);
-		motion += status.motionModifier2p;
+		motion += status.ReadStatus.MotionModifier2p;
 		motion += new Vector3(0, -10, 0) * Time.deltaTime;
 		//Debug.Log("MOtion2: " + motion);
 //		if(useGravity){
@@ -105,7 +100,7 @@ public class TestCharacterMotor: MonoBehaviour {
 		if(!showGUI) return;
 		GUILayout.Label("target direction: " + targetDirection);
 		GUILayout.Label("movespeed (velocity mag): " + GetComponent<CharacterController>().velocity.magnitude);
-		GUILayout.Label("movespeed (movespeed var): " + (targetDirection.sqrMagnitude > 0f ? status.GetModifiedStatusf(ActorStatus.StatusType.MOVESPEED) : 0f));
+		GUILayout.Label("movespeed (movespeed var): " + (targetDirection.sqrMagnitude > 0f ? status.ReadStatus.MoveSpeed : 0f));
 	}
 	
 	float getRunAnimationSpeedValue(float velocity){

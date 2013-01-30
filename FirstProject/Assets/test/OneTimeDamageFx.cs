@@ -57,19 +57,21 @@ public class OneTimeDamageFx : IActorStatusEffect {
 		}
 		damageDone = true;
 		
-		if(status.GetModifiedStatusf(ActorStatus.StatusType.HP) <= 0f) return;
-		float pHp = status.baseHP;
-		status.baseHP -= damage;
-		if(status.baseHP < 0) status.baseHP = 0;
+		if(status.ReadStatus.HP <= 0f) return;
+		status.WriteStatus().BaseHP -= damage;
+		float pHp = status.WriteStatus().BaseHP;
+		//pHp -= damage;
+		Debug.Log ("HP:" + status.WriteStatus().BaseHP);
+		if(pHp < 0) pHp = 0;
 	
-		if(status.GetModifiedStatusf(ActorStatus.StatusType.HP) <= 0f){
+		//if(status.GetModifiedStatusf(ActorStatus.StatusType.HP) <= 0f){
 			if(applyForceOnDeath){
 				ragdollTurner.ReadyExplosion(explosionPosition, explosionForce, explosionRadius);	
 			}
 			else{
 				ragdollTurner.UnreadyExplosion();
 			}	
-		}
+		//}
 		animator.SetBool("Hit", true);
 		animationDone = true;
 	}

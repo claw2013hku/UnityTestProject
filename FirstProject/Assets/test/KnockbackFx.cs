@@ -39,8 +39,7 @@ public class KnockbackFx : IActorStatusEffect {
 	}
 	
 	public override void OnApply(ActorStatus status){
-		status.motionModifier1m = 0;
-		status.motionModifier2p += motion;
+		status.WriteStatus().SetMotionModifier(0, motion);
 		Debug.Log ("apply motion: " + motion);
 	}
 	

@@ -37,19 +37,21 @@
     <Reference Include="System.XML" />
 	<Reference Include="System.Core" />
 	<Reference Include="UnityEngine">
-	  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>C:/Program Files/Unity4/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>C:/Program Files/Unity4/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Game Scripts\ActorStatus.cs" />
+     <Compile Include="Assets\Game Scripts\ActorStatusComponent.cs" />
      <Compile Include="Assets\Game Scripts\BasicControlScheme.cs" />
      <Compile Include="Assets\Game Scripts\BasicSiegeControlScheme.cs" />
      <Compile Include="Assets\Game Scripts\IActorStatusEffect.cs" />
      <Compile Include="Assets\Game Scripts\NetworkCharacterAssign.cs" />
      <Compile Include="Assets\Game Scripts\RagdollTurner.cs" />
+     <Compile Include="Assets\Game Scripts\RunFx.cs" />
      <Compile Include="Assets\Sample Assets\Locomotion\Scripts\Locomotion.cs" />
      <Compile Include="Assets\Scripts\Agent.cs" />
      <Compile Include="Assets\Scripts\AnimatorController_UI.cs" />
@@ -98,6 +100,11 @@
      <Compile Include="Assets\Scripts\WinGame.cs" />
      <Compile Include="Assets\Scripts\WindowPad.cs" />
      <Compile Include="Assets\Scripts\indoorCameraTrigger.cs" />
+     <Compile Include="Assets\iTween\Plugins\iTween.cs" />
+     <Compile Include="Assets\iTween\Sample\MoveSample.cs" />
+     <Compile Include="Assets\iTween\Sample\RotateSample.cs" />
+     <Compile Include="Assets\iTween\Sample\SampleInfo.cs" />
+     <Compile Include="Assets\test\ActorStatusOld.cs" />
      <Compile Include="Assets\test\DeathToRagdollFx.cs" />
      <Compile Include="Assets\test\KnockbackFx.cs" />
      <Compile Include="Assets\test\MovesControllerTest.cs" />
@@ -116,6 +123,7 @@
      <Compile Include="Assets\test\sfs\Lobby\Scripts\LoginGUI.cs" />
      <Compile Include="Assets\test\sfs\Lobby\Scripts\SmartFoxConnection.cs" />
      <Compile Include="Assets\test\sfsTest\Scripts\DeleteAfterSeconds.cs" />
+     <Compile Include="Assets\test\sfsTest\Scripts\GameNetworkManager.cs" />
      <Compile Include="Assets\test\sfsTest\Scripts\NetworkTransform.cs" />
      <Compile Include="Assets\test\sfsTest\Scripts\NetworkTransformInterpolation.cs" />
      <Compile Include="Assets\test\sfsTest\Scripts\NetworkTransformReceiver.cs" />
@@ -138,6 +146,7 @@
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_Antialiasing\NFAA.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\VignetteShader.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_DepthOfField\DepthOfFieldScatter.shader" />
+     <None Include="Assets\iTween\ReadMe!\ReadMe!.txt" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\MotionBlur.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\GlowCompose.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\Contrast Stretch\MinMaxReduction.shader" />

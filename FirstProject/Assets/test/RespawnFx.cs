@@ -29,7 +29,7 @@ public class RespawnFx : IActorStatusEffect {
 	}
 	
 	public override void OnApply(ActorStatus status){
-		float hp = status.GetModifiedStatusf(ActorStatus.StatusType.HP);
+		float hp = status.ReadStatus.HP;
 		if(hp <= 0f && !startDeathTimer){
 			startDeathTimer = true;
 		}
@@ -39,7 +39,7 @@ public class RespawnFx : IActorStatusEffect {
 		}
 		if(revive){
 			revive = false;
-			status.baseHP = 1;
+			status.WriteStatus().BaseHP = 1;
 			ragdollTurner.UnturnRagdoll();
 		}
 	}

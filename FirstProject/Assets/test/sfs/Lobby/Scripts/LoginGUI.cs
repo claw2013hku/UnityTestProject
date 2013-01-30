@@ -21,7 +21,8 @@ public class LoginGUI : MonoBehaviour {
 
 	private string username = "";
 	private string loginErrorMessage = "";
-
+	
+	private bool connecting = false;
 	/************
      * Unity callback methods
      ************/
@@ -31,12 +32,17 @@ public class LoginGUI : MonoBehaviour {
 	}
 	
 	void FixedUpdate() {
-		smartFox.ProcessEvents();
+		if(smartFox != null)
+			smartFox.ProcessEvents();
 	}
 	
 	void Awake() {
 		Application.runInBackground = true;
 		Screen.showCursor = true;
+		
+	}
+	
+	void Connect(){
 		// In a webplayer (or editor in webplayer mode) we need to setup security policy negotiation with the server first
 		if (Application.isWebPlayer || Application.isEditor) {
 			if (!Security.PrefetchSocketPolicy(serverName, serverPort, 500)) {
@@ -57,7 +63,8 @@ public class LoginGUI : MonoBehaviour {
 		smartFox.AddEventListener(SFSEvent.UDP_INIT, OnUdpInit);
 
 		smartFox.AddLogListener(LogLevel.DEBUG, OnDebugMessage);
-
+		
+		connecting = true;
 		smartFox.Connect(serverName, serverPort);
 	}
 
@@ -65,15 +72,18 @@ public class LoginGUI : MonoBehaviour {
 		GUI.skin = sfsSkin;
 			
 		// Determine which state we are in and show the GUI accordingly
-		if (smartFox.IsConnected) {
+		if (smartFox != null && smartFox.IsConnected) {
 			DrawLoginGUI();
 		}
-		else {
+		else if (connecting){
 			string message = "Waiting for connection";
 			if (loginErrorMessage != "") {
 				message = "Connection error. "+loginErrorMessage;
 			}
 			DrawMessagePanelGUI(message);
+		}
+		else{
+			DrawConnectGUI();	
 		}
 	}
 	
@@ -136,20 +146,20 @@ public class LoginGUI : MonoBehaviour {
 		username = GUILayout.TextField(username, 25, GUILayout.MinWidth(200));
 		GUILayout.EndHorizontal();
 
-		GUILayout.BeginHorizontal();
-		GUILayout.Label("Server Name: ");
-		serverName = GUILayout.TextField(serverName, 25, GUILayout.MinWidth(200));
-		GUILayout.EndHorizontal();
-
-		GUILayout.BeginHorizontal();
-		GUILayout.Label("Server Port: ");
-		serverPort = int.Parse(GUILayout.TextField(serverPort.ToString(), 4, GUILayout.MinWidth(200)));
-		GUILayout.EndHorizontal();
-
-		GUILayout.BeginHorizontal();
-		GUILayout.Label("Invert Mouse Y: ");
-//		OptionsManager.InvertMouseY = GUILayout.Toggle(OptionsManager.InvertMouseY, "");
-		GUILayout.EndHorizontal();
+//		GUILayout.BeginHorizontal();
+//		GUILayout.Label("Server Name: ");
+//		serverName = GUILayout.TextField(serverName, 25, GUILayout.MinWidth(200));
+//		GUILayout.EndHorizontal();
+//
+//		GUILayout.BeginHorizontal();
+//		GUILayout.Label("Server Port: ");
+//		serverPort = int.Parse(GUILayout.TextField(serverPort.ToString(), 4, GUILayout.MinWidth(200)));
+//		GUILayout.EndHorizontal();
+//
+//		GUILayout.BeginHorizontal();
+//		GUILayout.Label("Invert Mouse Y: ");
+////		OptionsManager.InvertMouseY = GUILayout.Toggle(OptionsManager.InvertMouseY, "");
+//		GUILayout.EndHorizontal();
 		
 		GUILayout.Label(loginErrorMessage);
 			
@@ -159,6 +169,51 @@ public class LoginGUI : MonoBehaviour {
 		if (GUILayout.Button("Login")  || (Event.current.type == EventType.keyDown && Event.current.character == '\n')) {
 			Debug.Log("Sending login request");
 			smartFox.Send(new LoginRequest(username, "", zone));
+		}
+		GUILayout.FlexibleSpace();
+		GUILayout.EndHorizontal();
+		GUILayout.FlexibleSpace();
+		
+		GUILayout.EndArea ();		
+				
+		GUILayout.EndVertical();
+		GUILayout.EndArea ();		
+	}
+	
+	private void DrawConnectGUI() {
+		// Lets just quickly set up some GUI layout variables
+		float panelWidth = 400;
+		float panelHeight = 300;
+		float panelPosX = Screen.width/2 - panelWidth/2;
+		float panelPosY = Screen.height/2 - panelHeight/2;
+		
+		// Draw the box
+		GUILayout.BeginArea(new Rect(panelPosX, panelPosY, panelWidth, panelHeight));
+		GUILayout.Box ("Login", GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+		GUILayout.BeginVertical();
+		GUILayout.BeginArea(new Rect(20, 25, panelWidth-40, panelHeight-60), GUI.skin.customStyles[0]);
+		
+		// Lets show login box!
+		GUILayout.FlexibleSpace();
+		
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Server Name: ");
+		serverName = GUILayout.TextField(serverName, 25, GUILayout.MinWidth(200));
+		GUILayout.EndHorizontal();
+
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Server Port: ");
+		serverPort = int.Parse(GUILayout.TextField(serverPort.ToString(), 4, GUILayout.MinWidth(200)));
+		GUILayout.EndHorizontal();
+		
+		GUILayout.Label(loginErrorMessage);
+			
+		// Center login button
+		GUILayout.BeginHorizontal();
+		GUILayout.FlexibleSpace();		
+		if (GUILayout.Button("Connect")  || (Event.current.type == EventType.keyDown && Event.current.character == '\n')) {
+			Debug.Log("Sending connect request");
+			Connect();
 		}
 		GUILayout.FlexibleSpace();
 		GUILayout.EndHorizontal();
@@ -194,12 +249,14 @@ public class LoginGUI : MonoBehaviour {
 			SmartFoxConnection.Connection = smartFox;
 		} else {
 			loginErrorMessage = error;
+			connecting = false;
 		}
 	}
 
 	public void OnConnectionLost(BaseEvent evt) {
 		loginErrorMessage = "Connection lost / no connection to server";
 		UnregisterSFSSceneCallbacks();
+		connecting = false;
 	}
 
 	public void OnDebugMessage(BaseEvent evt) {

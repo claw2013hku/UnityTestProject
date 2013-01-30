@@ -21,7 +21,7 @@ public class DeathToRagdollFx : IActorStatusEffect {
 	}
 	
 	public override void OnApply(ActorStatus status){
-		float hp = status.GetModifiedStatusf(ActorStatus.StatusType.HP);
+		float hp = status.ReadStatus.HP;
 		if(isAliveLastFrame){
 			if(hp <= 0f){
 				foreach(GameObject gameObj in shutdownChildren){
