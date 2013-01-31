@@ -48,8 +48,16 @@
      <Compile Include="Assets\Game Scripts\ActorStatusComponent.cs" />
      <Compile Include="Assets\Game Scripts\BasicControlScheme.cs" />
      <Compile Include="Assets\Game Scripts\BasicSiegeControlScheme.cs" />
+     <Compile Include="Assets\Game Scripts\CharacterPositionEffector.cs" />
+     <Compile Include="Assets\Game Scripts\CharacterPositionEffectorComponent.cs" />
+     <Compile Include="Assets\Game Scripts\CharacterPositionReceptor.cs" />
+     <Compile Include="Assets\Game Scripts\CharacterPositionSender.cs" />
+     <Compile Include="Assets\Game Scripts\CharacterStateEffectorComponent.cs" />
      <Compile Include="Assets\Game Scripts\IActorStatusEffect.cs" />
+     <Compile Include="Assets\Game Scripts\Interpolatable.cs" />
+     <Compile Include="Assets\Game Scripts\Interpolator.cs" />
      <Compile Include="Assets\Game Scripts\NetworkCharacterAssign.cs" />
+     <Compile Include="Assets\Game Scripts\NetworkTransformInterpolator.cs" />
      <Compile Include="Assets\Game Scripts\RagdollTurner.cs" />
      <Compile Include="Assets\Game Scripts\RunFx.cs" />
      <Compile Include="Assets\Sample Assets\Locomotion\Scripts\Locomotion.cs" />

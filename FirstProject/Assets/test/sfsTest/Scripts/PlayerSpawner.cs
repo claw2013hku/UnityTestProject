@@ -23,14 +23,14 @@ public class PlayerSpawner : MonoBehaviour {
 		return playerObj;
 	}
 	
-	private Dictionary<int, NetworkTransformReceiver> recipients = new Dictionary<int, NetworkTransformReceiver>();
+	private Dictionary<int, CharacterPositionReceptor> recipients = new Dictionary<int, CharacterPositionReceptor>();
 	private Dictionary<int, GameObject> items = new Dictionary<int, GameObject>();
 		
 	void Awake() {
 		instance = this;
 	}
 
-	public void SpawnPlayer(NetworkTransform ntransform, string name) {
+	public void SpawnPlayer(int id, NetworkTransform ntransform, string name) {
 //		if (Camera.main!=null) {
 //			Destroy(Camera.main.gameObject);
 //		}
@@ -45,6 +45,7 @@ public class PlayerSpawner : MonoBehaviour {
 		
 		CameraMode cameraMode = Camera.main.GetComponent<CameraMode>();
 		cameraMode.FocusTransform(playerObj);
+		recipients[id] = playerObj.GetComponent<CharacterPositionReceptor>();
 	}
 	
 	public void SpawnEnemy(int id, NetworkTransform ntransform, string name) {
@@ -56,10 +57,10 @@ public class PlayerSpawner : MonoBehaviour {
 		RemotePlayer remotePlayer = playerObj.GetComponent<RemotePlayer>();
 		remotePlayer.Init(name);
 		
-		recipients[id] = playerObj.GetComponent<NetworkTransformReceiver>();
+		recipients[id] = playerObj.GetComponent<CharacterPositionReceptor>();
 	}
 	
-	public NetworkTransformReceiver GetRecipient(int id) {
+	public CharacterPositionReceptor GetRecipient(int id) {
 		if (recipients.ContainsKey(id)) {
 			return recipients[id];
 		}
@@ -69,7 +70,7 @@ public class PlayerSpawner : MonoBehaviour {
 	public void DestroyEnemy(int id) {
 		Debug.Log ("Destory remote player : " + id);
 
-		NetworkTransformReceiver rec = GetRecipient(id);
+		CharacterPositionReceptor rec = GetRecipient(id);
 		if (rec == null) return;
 		Destroy(rec.gameObject);
 		recipients.Remove(id);
@@ -78,10 +79,10 @@ public class PlayerSpawner : MonoBehaviour {
 	public void SyncAnimation(int id, string msg, int layer) {
 		Debug.Log ("Synch player animation: " + id + ", " + msg + ", " + layer);
 
-		NetworkTransformReceiver rec = GetRecipient(id);
+		CharacterPositionReceptor rec = GetRecipient(id);
 		
 		if (rec == null) return;
-		rec.ReceiveAttackMove();
+		//rec.ReceiveAttackMove();
 //		if (layer == 0) {
 //			rec.GetComponent<AnimationSynchronizer>().RemoteStateUpdate(msg);
 //		}

@@ -66,7 +66,7 @@ public class TestCharacterMotor: MonoBehaviour {
 			AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 			animator.SetBool("Run", false);
 			if(IsGrounded()){
-				if(targetDirection.sqrMagnitude != 0 && (stateInfo.nameHash == idleAnimationNameHash || stateInfo.nameHash == runAnimationNameHash)){
+				if(targetDirection.sqrMagnitude != 0){// && (stateInfo.nameHash == idleAnimationNameHash || stateInfo.nameHash == runAnimationNameHash)){
 					animator.SetBool("Run", true);
 					motion += targetDirection.normalized * status.ReadStatus.MoveSpeed * Time.deltaTime;
 					transform.rotation = Quaternion.LookRotation(targetDirection);
@@ -88,10 +88,10 @@ public class TestCharacterMotor: MonoBehaviour {
 		collisionFlags = charController.Move(motion);
 		//Debug.Log("IsGrounded: " + IsGrounded());
 		
-		if(animator){
-			animator.SetFloat("Blended Speed", getRunAnimationSpeedValue(GetComponent<CharacterController>().velocity.magnitude));
-			animator.SetFloat("Speed", GetComponent<CharacterController>().velocity.magnitude);
-		}
+//		if(animator){
+//			animator.SetFloat("Blended Speed", getRunAnimationSpeedValue(GetComponent<CharacterController>().velocity.magnitude));
+//			animator.SetFloat("Speed", GetComponent<CharacterController>().velocity.magnitude);
+//		}
 		
         //animator.SetFloat("Direction", h, DirectionDampTime, Time.deltaTime);			  
 	}

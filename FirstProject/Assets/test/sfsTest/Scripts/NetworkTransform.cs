@@ -135,5 +135,4 @@ public class NetworkTransform
 		trans.Load(ntransform);
 		return trans;
 	}
-	
 }

@@ -92,19 +92,14 @@ public class ActorStatus : MonoBehaviour {
 		switch(type){
 		case ActorStatusComponent.StatusType.MAXHP:
 			return ((comp.BaseMaxHP + comp.MaxHPModifiers[0]) * comp.MaxHPModifiers[1] + comp.MaxHPModifiers[2]) * comp.MaxHPModifiers[3];
-			break;
 		case ActorStatusComponent.StatusType.HP:
 			return ((comp.BaseHP + comp.HPModifiers[0]) * comp.HPModifiers[1] + comp.HPModifiers[2]) * comp.HPModifiers[3];
-			break;
 		case ActorStatusComponent.StatusType.DAMAGE:
 			return ((comp.BaseDamage + comp.DamageModifiers[0]) * comp.DamageModifiers[1] + comp.DamageModifiers[2]) * comp.DamageModifiers[3];
-			break;
 		case ActorStatusComponent.StatusType.MOVESPEED:
 			return ((comp.BaseMoveSpeed + comp.MoveSpeedModifiers[0]) * comp.MoveSpeedModifiers[1] + comp.MoveSpeedModifiers[2]) * comp.MoveSpeedModifiers[3];
-			break;
 		case ActorStatusComponent.StatusType.ATTACKSPEED:
 			return ((comp.BaseAttackSpeed + comp.AttackSpeedModifiers[0]) * comp.AttackSpeedModifiers[1] + comp.AttackSpeedModifiers[2]) * comp.AttackSpeedModifiers[3];
-			break;
 		}
 		return 0f;
 	}
