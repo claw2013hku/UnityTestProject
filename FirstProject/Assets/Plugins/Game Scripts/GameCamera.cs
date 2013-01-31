@@ -26,7 +26,17 @@ public class GameCamera : MonoBehaviour {
 	public float verticalAimingSpeed = 1f;
 	
 	//smoothing
-	public float verticalAngleSmoothingTime = 0.9f;
+	public bool smoothHeight = true;
+	private float smoothHeightVelocity = 0f;
+	public float smoothHeightLag = 0.3f;
+	public bool smooth2dDistance = true;
+	private float smooth2dDistanceVelocity = 0f;
+	public float smooth2dDistanceLag = 0.3f;
+	
+	public bool[] smoothRotation = {true, true};
+	public float[] smoothRotationLag = {0.1f, 0.1f};
+	public float[] smoothRotationMaxSpeed = {150f, 150f};
+	private float[] smoothRotationVelocity = {0f, 0f};
 	
 	//position for this camera
 	[HideInInspector]
@@ -87,15 +97,15 @@ public class GameCamera : MonoBehaviour {
 		float xRot = direction.eulerAngles.x > 180 ? direction.eulerAngles.x - 360 : direction.eulerAngles.x;
 		xRot += -(ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_Y)) * verticalAimingSpeed;
 		if(!dontClampVertAng){
-			xRot = Mathf.Clamp(xRot, minVerticalAngle, maxVerticalAngle);
+			if(!freezeVerticalRotation){
+				xRot = Mathf.Clamp(xRot, minVerticalAngle, maxVerticalAngle);
+			}
 		}
 		xRot = xRot < 0 ? 360 + xRot : xRot;
 		
 		//extract and change by input the y rotation
 		float yRot = direction.eulerAngles.y;
-		if(!freezeVerticalRotation){
-			yRot += (ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_X)) * horizontalAimingSpeed;
-		}
+		yRot += (ControlSchemeInterface.instance.GetAxis(ControlAxis.CAMERA_SCROLL_X)) * horizontalAimingSpeed;
 		
 		//rotation the camera around the new x and y angles
 		Quaternion newDirection = 
@@ -108,11 +118,20 @@ public class GameCamera : MonoBehaviour {
 		//Clamp height of camera relative to player
 		if(!dontClampHeight){
 			float newTargetHeight = targetPosition.y - targetCenter.y;
-			if(newTargetHeight > maxHeight){
-				targetPosition.y = targetCenter.y + maxHeight;
-			}
-			else if (newTargetHeight < minHeight){
-				targetPosition.y = targetCenter.y + minHeight;
+			float tempTargetHeight = Mathf.Clamp(newTargetHeight, minHeight, maxHeight);
+//			if(newTargetHeight > maxHeight){
+//				targetPosition.y = targetCenter.y + maxHeight;
+//			}
+//			else if (newTargetHeight < minHeight){
+//				targetPosition.y = targetCenter.y + minHeight;
+//			}
+			if(tempTargetHeight != newTargetHeight){
+				if(smoothHeight){
+					targetPosition.y = targetCenter.y + Mathf.SmoothDamp(newTargetHeight, tempTargetHeight, ref smoothHeightVelocity, smoothHeightLag);		
+				}
+				else{
+					targetPosition.y = targetCenter.y + tempTargetHeight;	
+				}
 			}
 		}
 		
@@ -127,10 +146,18 @@ public class GameCamera : MonoBehaviour {
 			float distanceXZ = direction2D.magnitude;
 			direction2D.Normalize();
 			if(distanceXZ > maxDist){
-				targetPosition2D = targetCenter2D + direction2D * maxDist;
+				targetPosition2D = targetCenter2D + direction2D * (smooth2dDistance ? Mathf.SmoothDamp(distanceXZ, maxDist, ref smooth2dDistanceVelocity, smooth2dDistanceLag) : maxDist);
 			}
 			else if (distanceXZ < minDist){
-				targetPosition2D = targetCenter2D + direction2D * minDist;
+				//induce control errors
+//				if(smooth2dDistance){
+//					float smoothedDist = Mathf.SmoothDamp(distanceXZ, minDist, ref smooth2dDistanceVelocity, smooth2dDistanceLag);
+//					smoothedDist = Mathf.Clamp(smoothedDist, 0.5f, smoothedDist);
+//					targetPosition2D = targetCenter2D + direction2D * smoothedDist;
+				//}
+				//else{
+					targetPosition2D = targetCenter2D + direction2D * minDist;		
+				//}
 			}
 			else{
 				XZDistClamped = false;	
@@ -160,22 +187,21 @@ public class GameCamera : MonoBehaviour {
 			collidedGeometry = false;
 		}
 		
-		//appling smoothing to the vertical angle
-		Vector3 cameraDirection = targetCenter - targetPosition;
-		Quaternion targetRotation = Quaternion.LookRotation(cameraDirection, Vector3.up);
-	
-		float lerpedXRot = Mathf.LerpAngle(
-			rotation.eulerAngles.x,
-			targetRotation.eulerAngles.x,
-			verticalAngleSmoothingTime * Time.deltaTime);
-		targetRotation = 
-			Quaternion.Euler(
-				lerpedXRot,
-				targetRotation.eulerAngles.y,
-				targetRotation.eulerAngles.z);
-		
-		rotation = targetRotation;
 		position = targetPosition;
+		
+		//apply angular smoothing
+		Vector3 cameraDirection = targetCenter - position;
+		Quaternion targetRotation = Quaternion.LookRotation(cameraDirection, Vector3.up);
+		if(smoothRotation[0] || smoothRotation[1]){
+			rotation = Quaternion.Euler(
+			smoothRotation[0] ? Mathf.SmoothDampAngle(rotation.eulerAngles.x, targetRotation.eulerAngles.x, ref smoothRotationVelocity[0], smoothRotationLag[0], smoothRotationMaxSpeed[0]) : targetRotation.eulerAngles.x,
+			smoothRotation[1] ? Mathf.SmoothDampAngle(rotation.eulerAngles.y, targetRotation.eulerAngles.y, ref smoothRotationVelocity[1], smoothRotationLag[1], smoothRotationMaxSpeed[1]) : targetRotation.eulerAngles.y,
+			targetRotation.eulerAngles.z);	
+		}
+		else{
+			rotation = targetRotation;	
+		}
+		
 		lastHeight = position.y - targetCenter.y;
 	}
 	

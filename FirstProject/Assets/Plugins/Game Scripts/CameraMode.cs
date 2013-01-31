@@ -47,7 +47,7 @@ public class CameraMode : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void LateUpdate () {
 		if(lastCameraMode != CameraModes.AimCamera && ControlSchemeInterface.instance.GetAxis(ControlAxis.AIMING) == 1.0f)
 		{
 			SwitchCameraMode(CameraModes.AimCamera);
