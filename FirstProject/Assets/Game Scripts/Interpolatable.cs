@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
-public interface Interpolatable<T>{
-	T Interpolate(T rhs, double time);
-	T Extrapolate(double time);
+public interface Interpolatable<T> where T: new(){
 	double GetTimeStamp();
+	void SetTimeStamp(double time);
+	void Assign(T t);
 }

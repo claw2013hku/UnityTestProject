@@ -16,10 +16,18 @@ public class CharacterPositionEffector: MonoBehaviour {
 	private CollisionFlags collisionFlags;
 	
 	//remote logic
-	public float positionSmoothingLag = 0.1f;
+	public bool compensatePositionErrors = true;
+	public bool compensateRotationErrors = true;
+	public bool useResultantRotation = false;
+	public float positionSmoothingLag = 0.45f;
 	private Vector3 positionSmoothingVelocity;
-	public float rotationSmoothingLag = 0.1f;
+	public float predictionErrorMinRange = 1f;
+	public float predictionErrorMaxRange = 4f;
+	public float rotationSmoothingLag = 0.45f;
 	private float rotationSmoothingVelocity;
+	public float predictionErrorMinAngle = 25f;
+	public float predictionErrorMaxAngle = 90f;
+
 	
 	public bool showGUI = true;
 	public SFSNetworkManager.Mode mode = SFSNetworkManager.Mode.LOCAL;
@@ -36,12 +44,12 @@ public class CharacterPositionEffector: MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
+		Vector3 motion = Vector3.zero;
 		//local logic
 		if(SFSNetworkManager.Mode.LOCAL == mode || SFSNetworkManager.Mode.HOSTREMOTE == mode || SFSNetworkManager.Mode.PREDICT == mode){
 			if(!charController.enabled){
 				return;
 			}	
-			Vector3 motion = Vector3.zero;
 			
 			if(IsGrounded()){	
 				if(component.MoveDirection.sqrMagnitude != 0){// && 
@@ -62,26 +70,62 @@ public class CharacterPositionEffector: MonoBehaviour {
 				gravitationalVelocity = gravitationalAcceleration * Time.deltaTime;
 			}
 			motion += gravitationalVelocity;
-			//motion += new Vector3(0, -10, 0) * Time.deltaTime;
-		
 			collisionFlags = charController.Move(motion);
 		}
 		
 		//remote logic
-		
 		if(SFSNetworkManager.Mode.REMOTE == mode || SFSNetworkManager.Mode.PREDICT == mode){
 			if(SFSNetworkManager.Mode.REMOTE == mode){
 				transform.position = component.ResultantPosition;
 				transform.rotation = component.ResultantQuaternion;
 			}
-			else{
-				transform.position = Vector3.SmoothDamp(transform.position, component.ResultantPosition, ref positionSmoothingVelocity, positionSmoothingLag);				
+			else{	//Compensate prediction errors
+				if(compensatePositionErrors){
+					float distanceSqr = (transform.position - component.ResultantPosition).sqrMagnitude;
+					if(predictionErrorMinRange * predictionErrorMinRange <= distanceSqr && distanceSqr <= predictionErrorMaxRange * predictionErrorMaxRange){
+						transform.position = Vector3.SmoothDamp(transform.position, component.ResultantPosition, ref positionSmoothingVelocity, positionSmoothingLag);	
+					}
+					else if (predictionErrorMaxRange * predictionErrorMaxRange < distanceSqr){
+						transform.position = component.ResultantPosition;	
+					}
+					else{
+						//use current transform
+					}	
+				}
+				else{
+					//use current transform	
+				}
+				
+				if(compensateRotationErrors){
+					float angleDiff = transform.localRotation.eulerAngles.y - component.ResultantQuaternion.eulerAngles.y;
+					angleDiff = Mathf.Abs(angleDiff);
+					angleDiff = angleDiff > 180f ? 360f - angleDiff : angleDiff;
+					if(predictionErrorMinAngle <= angleDiff && angleDiff <= predictionErrorMaxAngle){
+						transform.rotation = Quaternion.Euler(
+						component.ResultantQuaternion.eulerAngles.x,
+						Mathf.SmoothDampAngle(transform.rotation.eulerAngles.y, component.ResultantQuaternion.eulerAngles.y, ref rotationSmoothingVelocity, rotationSmoothingLag),
+						component.ResultantQuaternion.eulerAngles.z);
+					}
+					else if (predictionErrorMaxAngle < angleDiff){
+						transform.rotation = component.ResultantQuaternion;
+					}
+					else{
+						//use local rotation
+					}
+				}
+				else if (useResultantRotation){
+					transform.rotation = component.ResultantQuaternion;	
+				}
+				else{
+					//use local rotation	
+				}
 			}
 		}
 		
 		if(SFSNetworkManager.Mode.LOCAL == mode || SFSNetworkManager.Mode.HOSTREMOTE == mode){
 			component.ResultantPosition = transform.position;
 			component.ResultantQuaternion = transform.rotation;
+			component.ResultantVelocity = GetComponent<CharacterController>().velocity;
 		}
 	}
 	

@@ -12,6 +12,8 @@ using Sfs2X.Logging;
 // The Neywork manager sends the messages to server and handles the response.
 public class SFSNetworkManager : MonoBehaviour
 {
+	public CharacterPositionReceptor testRecipient;
+	
 	public enum Mode {LOCAL, HOSTREMOTE, REMOTE, PREDICT}
 	
 	private bool running = false;
@@ -105,17 +107,17 @@ public class SFSNetworkManager : MonoBehaviour
 		Room room = smartFox.LastJoinedRoom;
 		ISFSObject data = new SFSObject();
 		CharacterPositionEffectorComponent.ToSFSObject(result, data);
-		Debug.Log ("Sending Resultant Pos: " + result.position);
 		ExtensionRequest request = new ExtensionRequest("sendCharacterPositionResultant", data, room, true); // True flag = UDP
 		smartFox.Send(request);	
 	}
+	
 	//Send Control Movement Info
 	public void SendCharacterPositionMovement(CharacterPositionEffectorComponent.NetworkMoveDirection result){
 		Room room = smartFox.LastJoinedRoom;
 		ISFSObject data = new SFSObject();
 		CharacterPositionEffectorComponent.ToSFSObject(result, data);
 		ExtensionRequest request = new ExtensionRequest("sendCharacterPositionMovement", data, room, true); // True flag = UDP
-		smartFox.Send(request);	
+		smartFox.Send(request);
 	}
 	
 	/// <summary>
@@ -157,7 +159,7 @@ public class SFSNetworkManager : MonoBehaviour
 	
 	// This method handles all the responses from the server
 	private void OnExtensionResponse(BaseEvent evt) {
-//		try {
+		try {
 			string cmd = (string)evt.Params["cmd"];
 			ISFSObject dt = (SFSObject)evt.Params["params"];
 			Debug.Log ("CMD: " + cmd);				
@@ -165,7 +167,7 @@ public class SFSNetworkManager : MonoBehaviour
 				HandleInstantiatePlayer(dt);
 			}
 			else if (cmd == "transform") {
-				HandleTransform(dt);
+				//HandleTransform(dt);
 			}
 			else if (cmd == "notransform") {
 				HandleNoTransform(dt);
@@ -185,10 +187,13 @@ public class SFSNetworkManager : MonoBehaviour
 			else if (cmd == "character_position_resultant"){
 				HandleCharacterPositionResultant(dt);
 			}
-//		}
-//		catch (Exception e) {
-//			Debug.Log("Exception handling response: "+e.Message+" >>> "+e.StackTrace);
-//		}
+			else if (cmd == "character_position_movement"){
+				HandleCharacterPositionMovement(dt);
+			}
+		}
+		catch (Exception e) {
+			Debug.Log("Exception handling response: "+e.Message+" >>> "+e.StackTrace);
+		}
 		
 	}
 	
@@ -203,37 +208,23 @@ public class SFSNetworkManager : MonoBehaviour
 		
 		if (userId == smartFox.MySelf.Id) {
 			PlayerSpawner.Instance.SpawnPlayer(userId, ntransform, name);
-			Debug.Log ("Spawn player at: " + ntransform.Position);
 		}
 		else {
 			PlayerSpawner.Instance.SpawnEnemy(userId, ntransform, name);
-			Debug.Log ("Spawn remote player at: " + ntransform.Position);
 		}
-	}
-	
-	// Updating transform of the remote player from server
-	private void HandleTransform(ISFSObject dt) {
-//		int userId = dt.GetInt("id");
-//		NetworkTransform ntransform = NetworkTransform.FromSFSObject(dt);
-//		if (userId != smartFox.MySelf.Id) {
-//			// Update transform of the remote user object
-//		
-//			NetworkTransformReceiver recipient = PlayerSpawner.Instance.GetRecipient(userId);
-//			if (recipient!=null) {
-//				recipient.ReceiveTransform(ntransform);
-//			}
-//			//Debug.Log ("Handle Transform: " + ntransform.Position);
-//		}
 	}
 	
 	private void HandleCharacterPositionResultant(ISFSObject dt){
 		int userId = dt.GetInt("id");
 		CharacterPositionEffectorComponent.NetworkResultant result = CharacterPositionEffectorComponent.ResultantFromSFSObject(dt);
-		Debug.Log ("Handle character pos: " + result.position);
 		
 		CharacterPositionReceptor recipient = PlayerSpawner.Instance.GetRecipient(userId);
 		if(recipient != null){
 			recipient.ReceiveResultant(result);
+		}
+		
+		if(testRecipient != null){
+			testRecipient.ReceiveResultant(result);	
 		}
 	}
 	

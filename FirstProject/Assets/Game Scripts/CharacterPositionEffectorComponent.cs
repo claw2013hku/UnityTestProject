@@ -14,46 +14,22 @@ public class CharacterPositionEffectorComponent : MonoBehaviour {
 	public Vector3 ResultantPosition {set {resultantPosition = value;} get {return resultantPosition;}}
 	public Quaternion resultantQuaternion;
 	public Quaternion ResultantQuaternion {set {resultantQuaternion = value;} get {return resultantQuaternion;}}
-	
+	public Vector3 resultantVelocity;
+	public Vector3 ResultantVelocity {set {resultantVelocity = value;} get {return resultantVelocity;}}
+		
 	//delegates
 	public delegate void MoveDirectionChange(Vector3 oldVal, Vector3 newVal);
 	public event MoveDirectionChange HasChangedMoveDirection;
 	
 	//Public methods
-	
-	// Stores the transform values to SFSObject to send them to server
-	public static void ToSFSObject(CharacterPositionEffectorComponent component, bool isDirection, ISFSObject data) {
-		ISFSObject tr = new SFSObject();
-		if(isDirection){
-			tr.PutDouble("x", Convert.ToDouble(component.MoveDirection.x));	
-			tr.PutDouble("y", Convert.ToDouble(component.MoveDirection.y));
-			tr.PutDouble("z", Convert.ToDouble(component.MoveDirection.z));
-			
-			tr.PutLong("t", Convert.ToInt64(0));
-			
-			data.PutSFSObject("character_position_movement", tr);
-		}
-		else{
-			tr.PutDouble("x", Convert.ToDouble(component.ResultantPosition.x));
-			tr.PutDouble("y", Convert.ToDouble(component.ResultantPosition.y));
-			tr.PutDouble("z", Convert.ToDouble(component.ResultantPosition.z));
-			
-			tr.PutDouble("rx", Convert.ToDouble(component.ResultantQuaternion.eulerAngles.x));
-			tr.PutDouble("ry", Convert.ToDouble(component.ResultantQuaternion.eulerAngles.y));
-			tr.PutDouble("rz", Convert.ToDouble(component.ResultantQuaternion.eulerAngles.z));
-			
-			tr.PutLong("t", Convert.ToInt64(0));
-				
-			data.PutSFSObject("character_position_resultant", tr);
-		}	
-	}
-	
 	public static void ToSFSObject(NetworkResultant result, ISFSObject data){
 		ISFSObject tr = new SFSObject();
 		tr.PutDouble("x", Convert.ToDouble(result.position.x));
 		tr.PutDouble("y", Convert.ToDouble(result.position.y));
 		tr.PutDouble("z", Convert.ToDouble(result.position.z));
-		
+		tr.PutDouble("vx", Convert.ToDouble(result.velocity.x));
+		tr.PutDouble("vy", Convert.ToDouble(result.velocity.y));
+		tr.PutDouble("vz", Convert.ToDouble(result.velocity.z));
 		tr.PutDouble("rx", Convert.ToDouble(result.rotation.eulerAngles.x));
 		tr.PutDouble("ry", Convert.ToDouble(result.rotation.eulerAngles.y));
 		tr.PutDouble("rz", Convert.ToDouble(result.rotation.eulerAngles.z));
@@ -83,14 +59,39 @@ public class CharacterPositionEffectorComponent : MonoBehaviour {
 			return timeStamp;
 		}
 		
-		public NetworkMoveDirection Interpolate(NetworkMoveDirection rhs, double time){
-			return this;	
+		public void SetTimeStamp(double time){
+			timeStamp = time;	
 		}
 		
-		public NetworkMoveDirection Extrapolate(double time){
-			return this;	
+		public void Assign(NetworkMoveDirection t){
+			moveDirection = t.moveDirection;
+			timeStamp = t.timeStamp;
 		}
 		
+		public static void Interpolate(int index, NetworkMoveDirection[] buffer, int size, double interpolationTime, ref NetworkMoveDirection result){
+			NetworkMoveDirection rhs = buffer[index];
+			if(index + 1 >= size){
+				return;
+			}
+			NetworkMoveDirection lhs = buffer[index + 1];
+			
+			double length = (rhs.timeStamp - lhs.timeStamp) / 1000f;
+			float t = 0.0f;
+			if (length > 0.0001) {
+				t = (float)((interpolationTime - lhs.timeStamp) / length);
+			}		
+			result.moveDirection = Vector3.Lerp(lhs.moveDirection, rhs.moveDirection, t);
+		}
+	
+		public static void Extrapolate(int index, NetworkMoveDirection[] buffer, int size, float extrapolationLength, ref NetworkMoveDirection result){
+			if(extrapolationLength <= 0.1f){
+				result.moveDirection = buffer[index].moveDirection;
+			}
+			else{
+				result.moveDirection = Vector3.zero;			
+			}
+		}
+			
 		public bool IsDifferent(CharacterPositionEffectorComponent comp, float accuracy) {
 			float posDif = Vector3.Distance(this.moveDirection, comp.MoveDirection);
 			return (posDif>accuracy);
@@ -104,20 +105,64 @@ public class CharacterPositionEffectorComponent : MonoBehaviour {
 	}
 	
 	public class NetworkResultant : Interpolatable<NetworkResultant>{
-		public Vector3 position;
+		public Vector3 position = new Vector3(148, 31, 230);
 		public Quaternion rotation;
+		public Vector3 velocity;
 		public double timeStamp;
 		
 		public double GetTimeStamp (){
 			return timeStamp;
 		}
 		
-		public NetworkResultant Interpolate(NetworkResultant rhs, double time){
-			return this;	
+		public void SetTimeStamp(double time){
+			timeStamp = time;	
 		}
 		
-		public NetworkResultant Extrapolate(double time){
-			return this;	
+		public void Assign(NetworkResultant t){
+			Assign (this, t);	
+		}
+		
+		public static void Assign(NetworkResultant lhs, NetworkResultant rhs){
+			lhs.position = rhs.position;
+			lhs.velocity = rhs.velocity;
+			lhs.rotation = rhs.rotation;
+			lhs.timeStamp = rhs.timeStamp;
+		}
+
+		public static void Interpolate(int index, NetworkResultant[] buffer, int size, double interpolationTime, ref NetworkResultant result){
+			NetworkResultant rhs = buffer[index];
+			if(index + 1 >= size){
+				Assign(result, rhs);
+				return;
+			}
+			
+			NetworkResultant lhs = buffer[index + 1];
+			
+			// Use the time between the two slots to determine if interpolation is necessary
+			float length = (float)(rhs.timeStamp - lhs.timeStamp) / 1000f;
+
+			Vector3 backwardsAcceleration = (lhs.velocity - rhs.velocity) * (1f / length);
+			
+			float backwardsTime = (float)(rhs.timeStamp / 1000 - interpolationTime);
+			// s = ut + 0.5at^2
+			Vector3 backwardsDistance = rhs.velocity * backwardsTime + 0.5f * backwardsAcceleration * backwardsTime * backwardsTime;
+			// compensation between normal interpolation and velocity interpolation
+			if(backwardsDistance.sqrMagnitude > (rhs.position - lhs.position).sqrMagnitude){
+				backwardsDistance *= ((rhs.position - lhs.position).magnitude / backwardsDistance.magnitude);
+			}
+			result.position = rhs.position - backwardsDistance;
+			
+			float t = 0.0F;
+			if (length > 0.0001f) {
+				t = (float)((interpolationTime - lhs.timeStamp) / length);
+			}
+	
+			result.rotation = Quaternion.Lerp(lhs.rotation, rhs.rotation, t);
+		}
+		
+		public static void Extrapolate(int index, NetworkResultant[] buffer, int size, float extrapolationLength, ref NetworkResultant result){
+			result.rotation = buffer[index].rotation;
+			result.position = buffer[index].position + buffer[index].velocity * extrapolationLength;
 		}
 		
 		public bool IsDifferent(CharacterPositionEffectorComponent result, float accuracy) {
@@ -130,6 +175,7 @@ public class CharacterPositionEffectorComponent : MonoBehaviour {
 		public static NetworkResultant FromComponent(CharacterPositionEffectorComponent comp){
 			NetworkResultant result = new NetworkResultant();
 			result.position = comp.ResultantPosition;
+			result.velocity = comp.ResultantVelocity;
 			result.rotation = comp.ResultantQuaternion;
 			return result;
 		}
@@ -162,11 +208,16 @@ public class CharacterPositionEffectorComponent : MonoBehaviour {
 		float y = Convert.ToSingle(transformData.GetDouble("y"));
 		float z = Convert.ToSingle(transformData.GetDouble("z"));
 		
+		float vx = Convert.ToSingle(transformData.GetDouble("vx"));
+		float vy = Convert.ToSingle(transformData.GetDouble("vy"));
+		float vz = Convert.ToSingle(transformData.GetDouble("vz"));
+		
 		float rx = Convert.ToSingle(transformData.GetDouble("rx"));
 		float ry = Convert.ToSingle(transformData.GetDouble("ry"));
-		float rz = Convert.ToSingle(transformData.GetDouble("rz"));
-					
+		float rz = Convert.ToSingle(transformData.GetDouble("rz"));	
+		
 		trans.position = new Vector3(x, y, z);
+		trans.velocity = new Vector3(vx, vy, vz);
 		trans.rotation = Quaternion.Euler(rx, ry, rz);
 				
 		if (transformData.ContainsKey("t")) {
@@ -176,6 +227,5 @@ public class CharacterPositionEffectorComponent : MonoBehaviour {
 			trans.timeStamp = 0;
 		}
 		return trans;
-	}
-	
+	}	
 }

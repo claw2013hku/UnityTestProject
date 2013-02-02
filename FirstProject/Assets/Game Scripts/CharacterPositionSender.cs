@@ -9,10 +9,11 @@ public class CharacterPositionSender : MonoBehaviour {
 	public SFSNetworkManager.Mode mode = SFSNetworkManager.Mode.LOCAL;
 	
 	// We will send transform each 0.1 second. To make transform synchronization smoother consider writing interpolation algorithm instead of making smaller period.
-	public static readonly float sendingPeriod = 0.1f; 
+	public static readonly float sendingPeriod = 0.1f;
 	
 	private readonly float accuracy = 0.002f;
-	private float timeLastSending = 0.0f;
+	private float timeLastSendingPos = 0.0f;
+	private float timeLastSendingMove = 0.0f;
 
 	private CharacterPositionEffectorComponent.NetworkResultant lastResultState = new CharacterPositionEffectorComponent.NetworkResultant();
 	private CharacterPositionEffectorComponent.NetworkMoveDirection lastMoveState = new CharacterPositionEffectorComponent.NetworkMoveDirection();	
@@ -31,28 +32,26 @@ public class CharacterPositionSender : MonoBehaviour {
 	}
 	
 	void SendResultant() {
-		if (lastResultState.IsDifferent(component, accuracy)) {
-			if (timeLastSending >= sendingPeriod) {
+		//if (lastResultState.IsDifferent(component, accuracy)) {
+			if (timeLastSendingPos >= sendingPeriod) {
 				lastResultState = CharacterPositionEffectorComponent.NetworkResultant.FromComponent(component);
-				//Debug.Log ("Sending Resultant: " + lastResultState.position + ", " + lastResultState.rotation);
 				SFSNetworkManager.Instance.SendCharacterPositionResultant(lastResultState);
-				timeLastSending = 0;
+				timeLastSendingPos = 0;
 				return;
 			}
-		}
-		timeLastSending += Time.deltaTime;
+		//}
+		timeLastSendingPos += Time.deltaTime;
 	}
 	
 	void SendMovementDirection(){
 		if (lastMoveState.IsDifferent(component, accuracy)) {
-			if (timeLastSending >= sendingPeriod) {
+			if (timeLastSendingMove >= sendingPeriod) {
 				lastMoveState = CharacterPositionEffectorComponent.NetworkMoveDirection.FromComponent(component);
-				//SFSNetworkManager.Instance.SendCharacterPositionMovement(lastMoveState);
-				Debug.Log ("Sending Movement: " + lastMoveState.moveDirection);
-				timeLastSending = 0;
+				SFSNetworkManager.Instance.SendCharacterPositionMovement(lastMoveState);
+				timeLastSendingMove = 0;
 				return;
 			}
 		}
-		timeLastSending += Time.deltaTime;	
+		timeLastSendingMove += Time.deltaTime;	
 	}
 }
