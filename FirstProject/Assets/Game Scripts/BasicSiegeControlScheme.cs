@@ -75,7 +75,7 @@ public class BasicSiegeControlScheme : ControlSchemeInterface {
 #elif UNITY_ANDROID || UNITY_IPHONE
 				return aimJoystick.IsJustDown() ? 1f : 0f;
 #else
-				return Input.GetButton("Fire1")? 1f : 0f;
+				return Input.GetButtonDown("Fire1")? 1f : 0f;
 #endif
 			case ControlAxis.CAMERA_SCROLL_X:
 				float value = 0f;

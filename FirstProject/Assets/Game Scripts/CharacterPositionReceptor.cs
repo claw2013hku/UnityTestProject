@@ -80,7 +80,7 @@ public class CharacterPositionReceptor : MonoBehaviour {
 			resultantInterpolator.ReceivedItem(ntr);
 		}
 		else{
-			Debug.LogError("wrong mode");	
+//			Debug.LogError("wrong mode");	
 		}
 	}
 
@@ -89,7 +89,7 @@ public class CharacterPositionReceptor : MonoBehaviour {
 			moveDirInterpolator.ReceivedItem(dir);
 		}
 		else{
-			Debug.LogError("wrong mode");	
+//			Debug.LogError("wrong mode");	
 		}
 	}
 }

@@ -1,12 +1,14 @@
 using UnityEngine;
 using System.Collections;
 [RequireComponent (typeof(CharacterPositionEffectorComponent))]
-[RequireComponent (typeof(CharacterStateEffectorComponent))]
+[RequireComponent (typeof(CharAnimEff))]
+[RequireComponent (typeof(CharAnimEffComp))]
 [RequireComponent (typeof(ActorStatusComponent))]
 
 public class CharacterPositionEffector: MonoBehaviour {
 	private CharacterPositionEffectorComponent component;
-	private CharacterStateEffectorComponent stateComponent;
+	private CharAnimEffComp stateComponent;
+	private CharAnimEff stateEff;
 	private ActorStatusComponent statusComponent;
 	private CharacterController charController;
 	private Vector3 gravitationalVelocity;
@@ -36,7 +38,8 @@ public class CharacterPositionEffector: MonoBehaviour {
 	void Start () 
 	{
 		component = GetComponent<CharacterPositionEffectorComponent>();
-		stateComponent = GetComponent<CharacterStateEffectorComponent>();
+		stateComponent = GetComponent<CharAnimEffComp>();
+		stateEff = GetComponent<CharAnimEff>();
 		statusComponent = GetComponent<ActorStatusComponent>();
 		charController = GetComponent<CharacterController>();
 	}
@@ -52,9 +55,9 @@ public class CharacterPositionEffector: MonoBehaviour {
 			}	
 			
 			if(IsGrounded()){	
-				if(component.MoveDirection.sqrMagnitude != 0){// && 
-					//(stateComponent.CurrentAnimationState == stateComponent.IdleAnimationNameHash 
-					//|| stateComponent.CurrentAnimationState == stateComponent.RunAnimationNameHash)){
+				if(component.MoveDirection.sqrMagnitude != 0 && 
+					(stateComponent.StateInfoNameHash == stateEff.IdleAnimationNameHash
+					|| stateComponent.StateInfoNameHash == stateEff.RunAnimationNameHash)){
 					motion += component.MoveDirection.normalized * statusComponent.MoveSpeed * Time.deltaTime;
 					transform.rotation = Quaternion.LookRotation(component.MoveDirection);
 				}
@@ -136,7 +139,7 @@ public class CharacterPositionEffector: MonoBehaviour {
 		GUILayout.Label("movespeed (movespeed var): " + (component.MoveDirection.sqrMagnitude > 0f ? statusComponent.MoveSpeed : 0f));
 	}
 
-	private bool IsGrounded () {
+	public bool IsGrounded () {
 		return (collisionFlags & CollisionFlags.CollidedBelow) != 0;
 	}
 }

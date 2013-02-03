@@ -48,6 +48,10 @@
      <Compile Include="Assets\Game Scripts\ActorStatusComponent.cs" />
      <Compile Include="Assets\Game Scripts\BasicControlScheme.cs" />
      <Compile Include="Assets\Game Scripts\BasicSiegeControlScheme.cs" />
+     <Compile Include="Assets\Game Scripts\CharAnimEff.cs" />
+     <Compile Include="Assets\Game Scripts\CharAnimEffComp.cs" />
+     <Compile Include="Assets\Game Scripts\CharAnimRecp.cs" />
+     <Compile Include="Assets\Game Scripts\CharAnimSend.cs" />
      <Compile Include="Assets\Game Scripts\CharacterPositionEffector.cs" />
      <Compile Include="Assets\Game Scripts\CharacterPositionEffectorComponent.cs" />
      <Compile Include="Assets\Game Scripts\CharacterPositionReceptor.cs" />

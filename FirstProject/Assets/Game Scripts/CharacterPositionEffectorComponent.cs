@@ -151,6 +151,8 @@ public class CharacterPositionEffectorComponent : MonoBehaviour {
 				backwardsDistance *= ((rhs.position - lhs.position).magnitude / backwardsDistance.magnitude);
 			}
 			result.position = rhs.position - backwardsDistance;
+			// v = u + at;
+			result.velocity = rhs.velocity + backwardsAcceleration * backwardsTime;
 			
 			float t = 0.0F;
 			if (length > 0.0001f) {
@@ -163,6 +165,7 @@ public class CharacterPositionEffectorComponent : MonoBehaviour {
 		public static void Extrapolate(int index, NetworkResultant[] buffer, int size, float extrapolationLength, ref NetworkResultant result){
 			result.rotation = buffer[index].rotation;
 			result.position = buffer[index].position + buffer[index].velocity * extrapolationLength;
+			result.velocity = buffer[index].velocity;
 		}
 		
 		public bool IsDifferent(CharacterPositionEffectorComponent result, float accuracy) {

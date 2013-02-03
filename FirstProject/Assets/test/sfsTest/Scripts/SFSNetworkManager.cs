@@ -120,6 +120,16 @@ public class SFSNetworkManager : MonoBehaviour
 		smartFox.Send(request);
 	}
 	
+	//Send Animation State Info
+	public void SendAnimCompState(CharAnimEffComp.NetworkResultantState result){
+		Room room = smartFox.LastJoinedRoom;
+		ISFSObject data = new SFSObject();
+	 	result.ToSFSObject(data);
+		CharAnimEffComp.NetworkResultantState test = CharAnimEffComp.NetworkResultantState.FromSFSObject(data);
+		ExtensionRequest request = new ExtensionRequest("sendCharAnimCompState", data, room, true); // True flag = UDP
+		smartFox.Send(request);		
+	}
+	
 	/// <summary>
 	/// Send local animation state to the server
 	/// </summary>
@@ -162,7 +172,7 @@ public class SFSNetworkManager : MonoBehaviour
 		try {
 			string cmd = (string)evt.Params["cmd"];
 			ISFSObject dt = (SFSObject)evt.Params["params"];
-			Debug.Log ("CMD: " + cmd);				
+//			Debug.Log ("CMD: " + cmd);				
 			if (cmd == "spawnPlayer") {
 				HandleInstantiatePlayer(dt);
 			}
@@ -189,6 +199,9 @@ public class SFSNetworkManager : MonoBehaviour
 			}
 			else if (cmd == "character_position_movement"){
 				HandleCharacterPositionMovement(dt);
+			}
+			else if (cmd == "charAnimCompState"){
+				HandleCharAnimCompState(dt);	
 			}
 		}
 		catch (Exception e) {
@@ -234,6 +247,25 @@ public class SFSNetworkManager : MonoBehaviour
 		CharacterPositionReceptor recipient = PlayerSpawner.Instance.GetRecipient(userId);
 		if(recipient != null){
 			recipient.ReceiveMoveDirection(result);
+		}
+	}
+	
+	private void HandleCharAnimCompState(ISFSObject dt){
+		int userId = dt.GetInt("id");
+		CharAnimEffComp.NetworkResultantState result = CharAnimEffComp.NetworkResultantState.FromSFSObject(dt);
+		CharAnimRecp recipient = PlayerSpawner.Instance.GetRecipient(userId).GetComponent<CharAnimRecp>();
+//		Debug.Log ("Receive Anim State: " + result.nameHash + ", slash: " + result.state.Slash + ", slashV: " + result.state.SlashVariant);
+		if(recipient != null){
+			recipient.ReceiveState(result);
+		}
+		else{
+			Debug.LogError("no recipient found");			
+		}
+		
+		if(testRecipient != null){
+			if(testRecipient.GetComponent<CharAnimRecp>() != null){
+				testRecipient.GetComponent<CharAnimRecp>().ReceiveState(result);	
+			}
 		}
 	}
 	
