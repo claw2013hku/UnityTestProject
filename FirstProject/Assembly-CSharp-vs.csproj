@@ -46,6 +46,8 @@
   <ItemGroup>
      <Compile Include="Assets\Game Scripts\ActorStatus.cs" />
      <Compile Include="Assets\Game Scripts\ActorStatusComponent.cs" />
+     <Compile Include="Assets\Game Scripts\ActorStatusRecp.cs" />
+     <Compile Include="Assets\Game Scripts\ActorStatusSend.cs" />
      <Compile Include="Assets\Game Scripts\BasicControlScheme.cs" />
      <Compile Include="Assets\Game Scripts\BasicSiegeControlScheme.cs" />
      <Compile Include="Assets\Game Scripts\CharAnimEff.cs" />
@@ -62,6 +64,8 @@
      <Compile Include="Assets\Game Scripts\Interpolator.cs" />
      <Compile Include="Assets\Game Scripts\NetworkCharacterAssign.cs" />
      <Compile Include="Assets\Game Scripts\NetworkTransformInterpolator.cs" />
+     <Compile Include="Assets\Game Scripts\Networking\NetMngr.cs" />
+     <Compile Include="Assets\Game Scripts\Networking\NetSyncObj.cs" />
      <Compile Include="Assets\Game Scripts\RagdollTurner.cs" />
      <Compile Include="Assets\Game Scripts\RunFx.cs" />
      <Compile Include="Assets\Sample Assets\Locomotion\Scripts\Locomotion.cs" />

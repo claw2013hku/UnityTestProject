@@ -15,6 +15,9 @@ public class KnockbackFx : IActorStatusEffect {
 	// Use this for initialization
 	protected override void Start () {
 		base.Start();
+		if(GetComponent<NetSyncObj>().mode != SFSNetworkManager.Mode.LOCAL){
+			dead = true;	
+		}
 	}
 	
 	// Update is called once per frame

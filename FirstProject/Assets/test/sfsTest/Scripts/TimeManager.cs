@@ -96,7 +96,5 @@ public class TimeManager : MonoBehaviour {
 		}
 		
 		averagePing = pingSum / pingCount;
-	}
-
-		
+	}		
 }

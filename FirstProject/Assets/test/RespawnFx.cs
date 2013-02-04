@@ -7,19 +7,26 @@ public class RespawnFx : IActorStatusEffect {
 	private float deathTimer = 0f;
 	private bool revive = false;
 	private RagdollTurner ragdollTurner;
-
+	
+	private float lastFrameHP = 0f;
 	// Use this for initialization
 	protected override void Start () {
 		base.Start();
+		lastFrameHP = GetComponent<ActorStatusComponent>().HP;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if(startDeathTimer){
-			deathTimer += Time.deltaTime;
-			if(deathTimer >= deathTime){
-				revive = true;
-			}
+		if(GetComponent<NetSyncObj>().mode == SFSNetworkManager.Mode.LOCAL){
+			if(startDeathTimer){
+				deathTimer += Time.deltaTime;
+				if(deathTimer >= deathTime){
+					revive = true;
+				}
+			}	
+		}
+		else{
+			lastFrameHP = GetComponent<ActorStatusComponent>().HP;
 		}
 	}
 	
@@ -30,17 +37,25 @@ public class RespawnFx : IActorStatusEffect {
 	
 	public override void OnApply(ActorStatus status){
 		float hp = status.ReadStatus.HP;
-		if(hp <= 0f && !startDeathTimer){
+		if(GetComponent<NetSyncObj>().mode == SFSNetworkManager.Mode.LOCAL){
+			if(hp <= 0f && !startDeathTimer){
 			startDeathTimer = true;
+			}
+			if(hp > 0f && startDeathTimer){
+				startDeathTimer = false;
+				deathTimer = 0f;
+			}
+			if(revive){
+				revive = false;
+				status.WriteStatus().BaseHP = 1;
+				ragdollTurner.UnturnRagdoll();
+			}	
 		}
-		if(hp > 0f && startDeathTimer){
-			startDeathTimer = false;
-			deathTimer = 0f;
-		}
-		if(revive){
-			revive = false;
-			status.WriteStatus().BaseHP = 1;
-			ragdollTurner.UnturnRagdoll();
+		else{
+			if(lastFrameHP <= 0 && hp > 0){
+				Debug.Log ("unturn ragdoll");
+				ragdollTurner.UnturnRagdoll();
+			}	
 		}
 	}
 	

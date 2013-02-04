@@ -34,16 +34,17 @@ public class MovesControllerTest : MonoBehaviour {
 			AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 			bool swinging = false;
 			if(stateInfo.nameHash == idleAnimationNameHash || stateInfo.nameHash == runAnimationNameHash){
-				if(ControlSchemeInterface.instance.GetAxis(ControlAxis.ATTACK1) > 0f){
-					animator.SetBool("Slash", true);
-					animator.SetInteger("SlashVariant", UnityEngine.Random.Range(1, 3));
-				}
+//				if(ControlSchemeInterface.instance.GetAxis(ControlAxis.ATTACK1) > 0f){
+//					animator.SetBool("Slash", true);
+//					animator.SetInteger("SlashVariant", UnityEngine.Random.Range(1, 3));
+//				}
 				DeactivateHitBoxes();
 			}
 			else if(stateInfo.nameHash == slash1AnimationNameHash || stateInfo.nameHash == slash2AnimationNameHash){
-				swinging = true;
+//				swinging = true;
 				if(animator.GetFloat("SlashHit") > 0f){
 					if(!slashHitbox.activated){
+						Debug.Log ("Activate hitbox");
 						slashHitbox.Activate(true);	
 					}
 				}
@@ -52,23 +53,23 @@ public class MovesControllerTest : MonoBehaviour {
 						slashHitbox.Activate(false);	
 					}
 				}
-				if(ControlSchemeInterface.instance.GetAxis(ControlAxis.ATTACK1) > 0f && stateInfo.normalizedTime > 0.6f){
-					animator.SetBool("Slash", true);
-					animator.SetInteger("SlashVariant", UnityEngine.Random.Range(1, 3));
-				}
+//				if(ControlSchemeInterface.instance.GetAxis(ControlAxis.ATTACK1) > 0f && stateInfo.normalizedTime > 0.6f){
+//					animator.SetBool("Slash", true);
+//					animator.SetInteger("SlashVariant", UnityEngine.Random.Range(1, 3));
+//				}
 			}
 			
-			AnimatorStateInfo nextStateInfo = animator.GetNextAnimatorStateInfo(0);
-			if(nextStateInfo.nameHash == idleAnimationNameHash || nextStateInfo.nameHash == runAnimationNameHash){
-
-			}
-			else if(nextStateInfo.nameHash == slash1AnimationNameHash || nextStateInfo.nameHash == slash2AnimationNameHash){
-				animator.SetBool("Slash", false);
-				animator.SetInteger("SlashVariant", 0);
-			}
-			if(swinging){
+//			AnimatorStateInfo nextStateInfo = animator.GetNextAnimatorStateInfo(0);
+//			if(nextStateInfo.nameHash == idleAnimationNameHash || nextStateInfo.nameHash == runAnimationNameHash){
+//
+//			}
+//			else if(nextStateInfo.nameHash == slash1AnimationNameHash || nextStateInfo.nameHash == slash2AnimationNameHash){
+//				animator.SetBool("Slash", false);
+//				animator.SetInteger("SlashVariant", 0);
+//			}
+//			if(swinging){
 //				Debug.Log ("swinging:" + swinging);
-			}
+//			}
 		}
 	}
 	

@@ -58,12 +58,17 @@ public class OneTimeDamageFx : IActorStatusEffect {
 		damageDone = true;
 		
 		if(status.ReadStatus.HP <= 0f) return;
-		status.WriteStatus().BaseHP -= damage;
-		float pHp = status.WriteStatus().BaseHP;
-		//pHp -= damage;
-		Debug.Log ("HP:" + status.WriteStatus().BaseHP);
-		if(pHp < 0) pHp = 0;
-	
+		if(GetComponent<NetSyncObj>().mode == SFSNetworkManager.Mode.LOCAL){
+			status.WriteStatus().BaseHP -= damage;
+			float pHp = status.WriteStatus().BaseHP;
+			//pHp -= damage;
+			//Debug.Log ("HP:" + status.WriteStatus().BaseHP);
+			if(pHp < 0) pHp = 0;	
+		}
+		else{
+			Debug.Log ("Remote damage fx");	
+		}
+		
 		//if(status.GetModifiedStatusf(ActorStatus.StatusType.HP) <= 0f){
 			if(applyForceOnDeath){
 				ragdollTurner.ReadyExplosion(explosionPosition, explosionForce, explosionRadius);	

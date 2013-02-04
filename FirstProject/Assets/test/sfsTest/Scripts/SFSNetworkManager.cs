@@ -125,9 +125,41 @@ public class SFSNetworkManager : MonoBehaviour
 		Room room = smartFox.LastJoinedRoom;
 		ISFSObject data = new SFSObject();
 	 	result.ToSFSObject(data);
-		CharAnimEffComp.NetworkResultantState test = CharAnimEffComp.NetworkResultantState.FromSFSObject(data);
-		ExtensionRequest request = new ExtensionRequest("sendCharAnimCompState", data, room, true); // True flag = UDP
+		ExtensionRequest request = new ExtensionRequest("sendCharAnimCompState", data, room); // True flag = UDP
 		smartFox.Send(request);		
+	}
+	
+	public void SendTriggerEnter(int colliderId, int targetId){
+		Room room = smartFox.LastJoinedRoom;
+		ISFSObject data = new SFSObject();
+		
+		ISFSObject tr = new SFSObject();
+		
+		tr.PutInt("colliderId", colliderId);
+		tr.PutInt("targetId", targetId);
+		tr.PutLong("t", Convert.ToInt64(0));
+			
+		data.PutSFSObject("collide_info", tr);
+		
+		ExtensionRequest request = new ExtensionRequest("sendTriggerEnter", data, room);
+		smartFox.Send(request);
+	}
+	
+	public void SendActorStatus(ISFSObject data){
+		Room room = smartFox.LastJoinedRoom;
+		ExtensionRequest request = new ExtensionRequest("sendActorStatus", data, room);
+		smartFox.Send(request);
+	}
+	
+	public void HandleActorStatus(ISFSObject data){
+		Debug.Log ("handling actor status msg");
+		int userId = data.GetInt("id");
+		GameObject recipient = PlayerSpawner.Instance.GetRecipient(userId);
+		if(recipient != null){
+			if(recipient.GetComponent<ActorStatusRecp>() != null){
+				recipient.GetComponent<ActorStatusRecp>().ReceiveStatus(data);		
+			}
+		}
 	}
 	
 	/// <summary>
@@ -203,11 +235,16 @@ public class SFSNetworkManager : MonoBehaviour
 			else if (cmd == "charAnimCompState"){
 				HandleCharAnimCompState(dt);	
 			}
+			else if (cmd == "triggerEnter"){
+				HandleTriggerEnter(dt);	
+			}
+			else if (cmd == "charStatus"){
+				HandleActorStatus(dt);	
+			}
 		}
 		catch (Exception e) {
 			Debug.Log("Exception handling response: "+e.Message+" >>> "+e.StackTrace);
 		}
-		
 	}
 	
 	// Instantiating player (our local FPS model, or remote 3rd person model)
@@ -231,22 +268,22 @@ public class SFSNetworkManager : MonoBehaviour
 		int userId = dt.GetInt("id");
 		CharacterPositionEffectorComponent.NetworkResultant result = CharacterPositionEffectorComponent.ResultantFromSFSObject(dt);
 		
-		CharacterPositionReceptor recipient = PlayerSpawner.Instance.GetRecipient(userId);
+		GameObject recipient = PlayerSpawner.Instance.GetRecipient(userId);
 		if(recipient != null){
-			recipient.ReceiveResultant(result);
+			recipient.GetComponent<CharacterPositionReceptor>().ReceiveResultant(result);
 		}
 		
 		if(testRecipient != null){
-			testRecipient.ReceiveResultant(result);	
+			testRecipient.GetComponent<CharacterPositionReceptor>().ReceiveResultant(result);	
 		}
 	}
 	
 	private void HandleCharacterPositionMovement(ISFSObject dt){
 		int userId = dt.GetInt("id");
 		CharacterPositionEffectorComponent.NetworkMoveDirection result = CharacterPositionEffectorComponent.MoveDirFromSFSObject(dt);
-		CharacterPositionReceptor recipient = PlayerSpawner.Instance.GetRecipient(userId);
+		GameObject recipient = PlayerSpawner.Instance.GetRecipient(userId);
 		if(recipient != null){
-			recipient.ReceiveMoveDirection(result);
+			recipient.GetComponent<CharacterPositionReceptor>().ReceiveMoveDirection(result);
 		}
 	}
 	
@@ -266,6 +303,22 @@ public class SFSNetworkManager : MonoBehaviour
 			if(testRecipient.GetComponent<CharAnimRecp>() != null){
 				testRecipient.GetComponent<CharAnimRecp>().ReceiveState(result);	
 			}
+		}
+	}
+	
+	private void HandleTriggerEnter(ISFSObject dt){
+		ISFSObject sObj = dt.GetSFSObject("collide_info");
+		
+		int colliderId = sObj.GetInt("colliderId");
+		int targetId = sObj.GetInt ("targetId");
+		
+	 	SlashHitTest recipient = PlayerSpawner.Instance.GetCollider(colliderId);
+		GameObject obj = PlayerSpawner.Instance.GetRecipient(targetId);
+		if(recipient != null && obj != null){
+			recipient.OnReceiveTriggerEnter(obj);
+		}
+		else{
+			Debug.LogError("network trigger enter error, collider: " + recipient + ", target: " + obj);
 		}
 	}
 	

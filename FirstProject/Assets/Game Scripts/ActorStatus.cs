@@ -5,6 +5,8 @@ using System.Collections;
 //Fires events when attached effect, destroyed effect
 [RequireComponent (typeof(ActorStatusComponent))]
 public class ActorStatus : MonoBehaviour {
+	public SFSNetworkManager.Mode mode = SFSNetworkManager.Mode.LOCAL;
+	
 	public bool showInGUI;
 	
 	private ActorStatusComponent statusComp;
@@ -19,7 +21,9 @@ public class ActorStatus : MonoBehaviour {
 	
 	void Update () {
 		//cache the actor status
-		CacheStatus();
+		if(mode != SFSNetworkManager.Mode.REMOTE){
+			CacheStatus();	
+		}
 		
 		//set modifiers by status effects and call detach on finished status effects
 		foreach(DictionaryEntry effectEntry in statusEffects){
@@ -55,7 +59,9 @@ public class ActorStatus : MonoBehaviour {
 		keysToRemove.Clear();
 		
 		//apply the actor status
-		ApplyStatus();
+		if(mode != SFSNetworkManager.Mode.REMOTE){
+			ApplyStatus();		
+		}
 	}
 	
 	void CacheStatus(){

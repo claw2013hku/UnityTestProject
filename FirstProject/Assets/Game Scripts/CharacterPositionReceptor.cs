@@ -77,7 +77,9 @@ public class CharacterPositionReceptor : MonoBehaviour {
 	
 	public void ReceiveResultant(CharacterPositionEffectorComponent.NetworkResultant ntr){
 		if(SFSNetworkManager.Mode.REMOTE == mode || SFSNetworkManager.Mode.PREDICT == mode){
-			resultantInterpolator.ReceivedItem(ntr);
+			if(resultantInterpolator != null){
+				resultantInterpolator.ReceivedItem(ntr);		
+			}
 		}
 		else{
 //			Debug.LogError("wrong mode");	
@@ -86,7 +88,9 @@ public class CharacterPositionReceptor : MonoBehaviour {
 
 	public void ReceiveMoveDirection(CharacterPositionEffectorComponent.NetworkMoveDirection dir){
 		if(SFSNetworkManager.Mode.HOSTREMOTE == mode){
-			moveDirInterpolator.ReceivedItem(dir);
+			if(moveDirInterpolator != null){
+				moveDirInterpolator.ReceivedItem(dir);		
+			}
 		}
 		else{
 //			Debug.LogError("wrong mode");	

@@ -22,6 +22,12 @@ public class CharacterPositionEffectorComponent : MonoBehaviour {
 	public event MoveDirectionChange HasChangedMoveDirection;
 	
 	//Public methods
+	void Start(){
+		resultantPosition = transform.position;	
+		resultantQuaternion = transform.rotation;
+		resultantVelocity = Vector3.zero;
+	}
+	
 	public static void ToSFSObject(NetworkResultant result, ISFSObject data){
 		ISFSObject tr = new SFSObject();
 		tr.PutDouble("x", Convert.ToDouble(result.position.x));
