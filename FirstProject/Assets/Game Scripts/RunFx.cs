@@ -11,7 +11,7 @@ public class RunFx : IActorStatusEffect {
 	
 	private bool isActivated = false;
 	// Use this for initialization
-	void Start () {
+	protected override void Start () {
 		base.Start();
 	}
 	
@@ -45,7 +45,7 @@ public class RunFx : IActorStatusEffect {
 //		Debug.Log (status.GetModifiers(ActorStatus.StatusType.MOVESPEED)[1]);
 	}
 	
-	virtual public string GetName(){
-		return "SpeedAreaModify";	
+	public override string GetName(){
+		return "Run";	
 	}
 }

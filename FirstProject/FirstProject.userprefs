@@ -1,17 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\test\RespawnFx.cs">
-    <Files>
-      <File FileName="Assets\test\DeathToRagdollFx.cs" Line="25" Column="24" />
-      <File FileName="Assets\Game Scripts\ActorStatusSend.cs" Line="46" Column="5" />
-      <File FileName="Assets\Game Scripts\ActorStatusRecp.cs" Line="29" Column="1" />
-      <File FileName="Assets\test\sfsTest\Scripts\SFSNetworkManager.cs" Line="156" Column="34" />
-      <File FileName="Assets\Game Scripts\ActorStatus.cs" Line="73" Column="4" />
-      <File FileName="Assets\test\SlashHitTest.cs" Line="80" Column="27" />
-      <File FileName="Assets\test\OneTimeDamageFx.cs" Line="72" Column="4" />
-      <File FileName="Assets\test\KnockbackFx.cs" Line="18" Column="3" />
-      <File FileName="Assets\test\RespawnFx.cs" Line="8" Column="11" />
-    </Files>
+  <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
@@ -22,7 +11,7 @@
                 <Node name="sfsTest" expanded="True">
                   <Node name="Scripts" expanded="True" />
                 </Node>
-                <Node name="RespawnFx.cs" selected="True" />
+                <Node name="HitboxController.cs" selected="True" />
               </Node>
             </Node>
           </Node>

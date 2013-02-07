@@ -1,10 +1,11 @@
 using UnityEngine;
 using System.Collections;
+using Sfs2X.Entities.Data;
 
-[RequireComponent (typeof(CharacterPositionEffectorComponent))]
+[RequireComponent (typeof(CharPosEffComp))]
 
-public class CharacterPositionSender : MonoBehaviour {
-	private CharacterPositionEffectorComponent component;
+public class CharPosSend : MonoBehaviour {
+	private CharPosEffComp component;
 	
 	public SFSNetworkManager.Mode mode = SFSNetworkManager.Mode.LOCAL;
 	
@@ -15,11 +16,11 @@ public class CharacterPositionSender : MonoBehaviour {
 	private float timeLastSendingPos = 0.0f;
 	private float timeLastSendingMove = 0.0f;
 
-	private CharacterPositionEffectorComponent.NetworkResultant lastResultState = new CharacterPositionEffectorComponent.NetworkResultant();
-	private CharacterPositionEffectorComponent.NetworkMoveDirection lastMoveState = new CharacterPositionEffectorComponent.NetworkMoveDirection();	
+	private CharPosEffComp.NetworkResultant lastResultState = new CharPosEffComp.NetworkResultant();
+	private CharPosEffComp.NetworkMoveDirection lastMoveState = new CharPosEffComp.NetworkMoveDirection();	
 	
 	void Start() {
-		component = GetComponent<CharacterPositionEffectorComponent>();
+		component = GetComponent<CharPosEffComp>();
 	}
 	
 	void FixedUpdate() { 
@@ -34,8 +35,10 @@ public class CharacterPositionSender : MonoBehaviour {
 	void SendResultant() {
 		//if (lastResultState.IsDifferent(component, accuracy)) {
 			if (timeLastSendingPos >= sendingPeriod) {
-				lastResultState = CharacterPositionEffectorComponent.NetworkResultant.FromComponent(component);
-				SFSNetworkManager.Instance.SendCharacterPositionResultant(lastResultState);
+				lastResultState = CharPosEffComp.NetworkResultant.FromComponent(component);
+				ISFSObject data = new SFSObject();
+				CharPosEffComp.ToSFSObject(lastResultState, data);
+				SFSNetworkManager.Instance.SendNetObjSync(data);
 				timeLastSendingPos = 0;
 				return;
 			}
@@ -46,8 +49,10 @@ public class CharacterPositionSender : MonoBehaviour {
 	void SendMovementDirection(){
 		if (lastMoveState.IsDifferent(component, accuracy)) {
 			if (timeLastSendingMove >= sendingPeriod) {
-				lastMoveState = CharacterPositionEffectorComponent.NetworkMoveDirection.FromComponent(component);
-				SFSNetworkManager.Instance.SendCharacterPositionMovement(lastMoveState);
+				lastMoveState = CharPosEffComp.NetworkMoveDirection.FromComponent(component);
+				ISFSObject data = new SFSObject();
+				CharPosEffComp.ToSFSObject(lastMoveState, data);
+				SFSNetworkManager.Instance.SendNetObjSync(data);
 				timeLastSendingMove = 0;
 				return;
 			}

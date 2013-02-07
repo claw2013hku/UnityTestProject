@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using Sfs2X.Entities.Data;
 
 [RequireComponent (typeof(CharAnimEffComp))]
 
@@ -45,6 +46,10 @@ public class CharAnimRecp : MonoBehaviour {
 		if(SFSNetworkManager.Mode.HOSTREMOTE == mode){
 			
 		}
+	}
+	
+	public void ReceiveState(ISFSObject obj){
+		ReceiveState(CharAnimEffComp.NetworkResultantState.FromSFSObject(obj));
 	}
 	
 	public void ReceiveState(CharAnimEffComp.NetworkResultantState state){

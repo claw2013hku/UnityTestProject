@@ -22,8 +22,8 @@ public class ActorStatusSend : MonoBehaviour {
 	void HandleComponentHasChangedStatus (bool isBase, ActorStatusComponent.StatusType type, float oldVal, float newVal)
 	{
 		if(!isBase){
-			pendingSend = true;
 			if(type == ActorStatusComponent.StatusType.HP){
+				pendingSend = true;
 				sendHP = true;	
 			}
 		}
@@ -44,7 +44,7 @@ public class ActorStatusSend : MonoBehaviour {
 			Debug.Log("Sending status change: " + component.HP);
 			tr.PutFloat("currentHP", component.HP);	
 		}	
-		data.PutSFSObject("charStatus", tr);
-		SFSNetworkManager.Instance.SendActorStatus(data);
+		data.PutSFSObject(NetSyncObjCharacter.statusDS, tr);
+		SFSNetworkManager.Instance.SendNetObjSync(data);
 	}
 }

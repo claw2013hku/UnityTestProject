@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class MovesControllerTest : MonoBehaviour {
+public class HitboxController : MonoBehaviour {
 	
 	protected Animator animator;
 	public IHitBox slashHitbox;
@@ -44,7 +44,7 @@ public class MovesControllerTest : MonoBehaviour {
 //				swinging = true;
 				if(animator.GetFloat("SlashHit") > 0f){
 					if(!slashHitbox.activated){
-						Debug.Log ("Activate hitbox");
+//						Debug.Log ("Activate hitbox");
 						slashHitbox.Activate(true);	
 					}
 				}

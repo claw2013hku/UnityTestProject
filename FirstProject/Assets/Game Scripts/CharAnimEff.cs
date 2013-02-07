@@ -15,8 +15,8 @@ public class CharAnimEff: MonoBehaviour {
 		
 	private Animator animator;
 	private CharAnimEffComp component;
-	private CharacterPositionEffectorComponent posComponent;
-	private CharacterPositionEffector posEffector;
+	private CharPosEffComp posComponent;
+	private CharPosEff posEffector;
 	
 	private static float[] runAnimationLookUpValues = {0.224f, 0.5f, 0.666f, 0.778f, 0.857f, 0.9165f, 0.963f, 1f};
 	private static float defaultRunAnimationVelocity = 5.299f;
@@ -29,8 +29,8 @@ public class CharAnimEff: MonoBehaviour {
 		
 		animator = GetComponent<Animator>();
 		component = GetComponent<CharAnimEffComp>();
-		posComponent = GetComponent<CharacterPositionEffectorComponent>();
-		posEffector = GetComponent<CharacterPositionEffector>();
+		posComponent = GetComponent<CharPosEffComp>();
+		posEffector = GetComponent<CharPosEff>();
 	}
 		
 	void Update () 

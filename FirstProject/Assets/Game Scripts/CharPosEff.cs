@@ -1,12 +1,12 @@
 using UnityEngine;
 using System.Collections;
-[RequireComponent (typeof(CharacterPositionEffectorComponent))]
+[RequireComponent (typeof(CharPosEffComp))]
 [RequireComponent (typeof(CharAnimEff))]
 [RequireComponent (typeof(CharAnimEffComp))]
 [RequireComponent (typeof(ActorStatusComponent))]
 
-public class CharacterPositionEffector: MonoBehaviour {
-	private CharacterPositionEffectorComponent component;
+public class CharPosEff: MonoBehaviour {
+	private CharPosEffComp component;
 	private CharAnimEffComp stateComponent;
 	private CharAnimEff stateEff;
 	private ActorStatusComponent statusComponent;
@@ -37,7 +37,7 @@ public class CharacterPositionEffector: MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		component = GetComponent<CharacterPositionEffectorComponent>();
+		component = GetComponent<CharPosEffComp>();
 		stateComponent = GetComponent<CharAnimEffComp>();
 		stateEff = GetComponent<CharAnimEff>();
 		statusComponent = GetComponent<ActorStatusComponent>();

@@ -1,9 +1,10 @@
 using UnityEngine;
 using System.Collections;
+using Sfs2X.Entities.Data;
 
-[RequireComponent (typeof(CharacterPositionEffectorComponent))]
+[RequireComponent (typeof(CharPosEffComp))]
 
-public class CharacterPositionReceptor : MonoBehaviour {
+public class CharPosRecp : MonoBehaviour {
 	public SFSNetworkManager.Mode mode = SFSNetworkManager.Mode.LOCAL;
 	
 	public float interpolatorBackTime = 0.1f;
@@ -11,32 +12,32 @@ public class CharacterPositionReceptor : MonoBehaviour {
 	public bool useInterpolation = true;
 	public bool useExtrapolation = true;
 	
-	private Interpolator<CharacterPositionEffectorComponent.NetworkMoveDirection> moveDirInterpolator;
-	private Interpolator<CharacterPositionEffectorComponent.NetworkResultant> resultantInterpolator;
+	private Interpolator<CharPosEffComp.NetworkMoveDirection> moveDirInterpolator;
+	private Interpolator<CharPosEffComp.NetworkResultant> resultantInterpolator;
 	
-	private CharacterPositionEffectorComponent component;
+	private CharPosEffComp component;
 	
 	void Start () {
-		component = GetComponent<CharacterPositionEffectorComponent>();	
+		component = GetComponent<CharPosEffComp>();	
 		
-	 	moveDirInterpolator = new Interpolator<CharacterPositionEffectorComponent.NetworkMoveDirection>(
+	 	moveDirInterpolator = new Interpolator<CharPosEffComp.NetworkMoveDirection>(
 			useInterpolation,
 			interpolatorBackTime,
-			CharacterPositionEffectorComponent.NetworkMoveDirection.Interpolate,
+			CharPosEffComp.NetworkMoveDirection.Interpolate,
 			useExtrapolation,
 			interpolatorExTime,
-			CharacterPositionEffectorComponent.NetworkMoveDirection.Extrapolate);
+			CharPosEffComp.NetworkMoveDirection.Extrapolate);
 		
-		resultantInterpolator = new Interpolator<CharacterPositionEffectorComponent.NetworkResultant>(
+		resultantInterpolator = new Interpolator<CharPosEffComp.NetworkResultant>(
 			useInterpolation,
 			interpolatorBackTime,
-			CharacterPositionEffectorComponent.NetworkResultant.Interpolate,
+			CharPosEffComp.NetworkResultant.Interpolate,
 			useExtrapolation,
 			interpolatorExTime,
-			CharacterPositionEffectorComponent.NetworkResultant.Extrapolate);
+			CharPosEffComp.NetworkResultant.Extrapolate);
 	}
 	
-	CharacterPositionEffectorComponent.NetworkResultant currState = new CharacterPositionEffectorComponent.NetworkResultant();
+	CharPosEffComp.NetworkResultant currState = new CharPosEffComp.NetworkResultant();
 	void Update () {
 		if(SFSNetworkManager.Mode.LOCAL == mode || SFSNetworkManager.Mode.PREDICT == mode){
 			Transform cameraTransform = Camera.main.transform;
@@ -62,7 +63,7 @@ public class CharacterPositionReceptor : MonoBehaviour {
 			currState.velocity = component.ResultantVelocity;
 			
 			resultantInterpolator.Update(TimeManager.Instance.NetworkTime / 1000, currState);
-			CharacterPositionEffectorComponent.NetworkResultant result = resultantInterpolator.ResultantItem;
+			CharPosEffComp.NetworkResultant result = resultantInterpolator.ResultantItem;
 			component.ResultantPosition = result.position;
 			component.ResultantQuaternion = result.rotation;
 			component.ResultantVelocity = result.velocity;
@@ -70,12 +71,24 @@ public class CharacterPositionReceptor : MonoBehaviour {
 		
 		if(SFSNetworkManager.Mode.HOSTREMOTE == mode){
 			moveDirInterpolator.Update(TimeManager.Instance.NetworkTime / 1000, null);
-			CharacterPositionEffectorComponent.NetworkMoveDirection result = moveDirInterpolator.ResultantItem;
+			CharPosEffComp.NetworkMoveDirection result = moveDirInterpolator.ResultantItem;
 			component.MoveDirection = result.moveDirection;
 		}
 	}
 	
-	public void ReceiveResultant(CharacterPositionEffectorComponent.NetworkResultant ntr){
+	public void ReceiveResultant(ISFSObject obj){
+		if(obj.ContainsKey("char_pos")){
+			ReceiveResultant(CharPosEffComp.ResultantFromSFSObject(obj));	
+		}
+	}
+	
+	public void ReceiveMoveDirection(ISFSObject obj){
+		if(obj.ContainsKey("char_mov")){
+			ReceiveMoveDirection(CharPosEffComp.MoveDirFromSFSObject(obj));	
+		}
+	}
+	
+	public void ReceiveResultant(CharPosEffComp.NetworkResultant ntr){
 		if(SFSNetworkManager.Mode.REMOTE == mode || SFSNetworkManager.Mode.PREDICT == mode){
 			if(resultantInterpolator != null){
 				resultantInterpolator.ReceivedItem(ntr);		
@@ -86,7 +99,7 @@ public class CharacterPositionReceptor : MonoBehaviour {
 		}
 	}
 
-	public void ReceiveMoveDirection(CharacterPositionEffectorComponent.NetworkMoveDirection dir){
+	public void ReceiveMoveDirection(CharPosEffComp.NetworkMoveDirection dir){
 		if(SFSNetworkManager.Mode.HOSTREMOTE == mode){
 			if(moveDirInterpolator != null){
 				moveDirInterpolator.ReceivedItem(dir);		

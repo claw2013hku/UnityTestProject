@@ -11,8 +11,8 @@ using Sfs2X.Logging;
 
 // The Neywork manager sends the messages to server and handles the response.
 public class SFSNetworkManager : MonoBehaviour
-{
-	public CharacterPositionReceptor testRecipient;
+{ 
+	public CharPosRecp testRecipient;
 	
 	public enum Mode {LOCAL, HOSTREMOTE, REMOTE, PREDICT}
 	
@@ -74,59 +74,66 @@ public class SFSNetworkManager : MonoBehaviour
 		smartFox.Send(request);
 	}
 	
-	/// <summary>
-	///  Send a request to shoot
-	/// </summary>
-	public void SendShot() {
-		Room room = smartFox.LastJoinedRoom;
-		ExtensionRequest request = new ExtensionRequest("shot", new SFSObject(), room);
-		smartFox.Send(request);
-	}
-	
-	public void SendReload() {
-		Room room = smartFox.LastJoinedRoom;
-		ExtensionRequest request = new ExtensionRequest("reload", new SFSObject(), room);
-		smartFox.Send(request);
-	}
+//	/// <summary>
+//	///  Send a request to shoot
+//	/// </summary>
+//	public void SendShot() {
+//		Room room = smartFox.LastJoinedRoom;
+//		ExtensionRequest request = new ExtensionRequest("shot", new SFSObject(), room);
+//		smartFox.Send(request);
+//	}
+//	
+//	public void SendReload() {
+//		Room room = smartFox.LastJoinedRoom;
+//		ExtensionRequest request = new ExtensionRequest("reload", new SFSObject(), room);
+//		smartFox.Send(request);
+//	}
 	/// <summary>
 	/// Send local transform to the server
 	/// </summary>
 	/// <param name="ntransform">
 	/// A <see cref="NetworkTransform"/>
 	/// </param>
-	public void SendTransform(NetworkTransform ntransform) {
-		Room room = smartFox.LastJoinedRoom;
-		ISFSObject data = new SFSObject();
-		ntransform.ToSFSObject(data);
-		ExtensionRequest request = new ExtensionRequest("sendTransform", data, room, true); // True flag = UDP
-		smartFox.Send(request);
-	}
+//	public void SendTransform(NetworkTransform ntransform) {
+//		Room room = smartFox.LastJoinedRoom;
+//		ISFSObject data = new SFSObject();
+//		ntransform.ToSFSObject(data);
+//		ExtensionRequest request = new ExtensionRequest("sendTransform", data, room, true); // True flag = UDP
+//		smartFox.Send(request);
+//	}
 	
-	//Send Resultant Position Info
-	public void SendCharacterPositionResultant(CharacterPositionEffectorComponent.NetworkResultant result){
-		Room room = smartFox.LastJoinedRoom;
-		ISFSObject data = new SFSObject();
-		CharacterPositionEffectorComponent.ToSFSObject(result, data);
-		ExtensionRequest request = new ExtensionRequest("sendCharacterPositionResultant", data, room, true); // True flag = UDP
-		smartFox.Send(request);	
-	}
-	
-	//Send Control Movement Info
-	public void SendCharacterPositionMovement(CharacterPositionEffectorComponent.NetworkMoveDirection result){
-		Room room = smartFox.LastJoinedRoom;
-		ISFSObject data = new SFSObject();
-		CharacterPositionEffectorComponent.ToSFSObject(result, data);
-		ExtensionRequest request = new ExtensionRequest("sendCharacterPositionMovement", data, room, true); // True flag = UDP
-		smartFox.Send(request);
-	}
+//	//Send Resultant Position Info
+//	public void SendCharacterPositionResultant(CharPosEffComp.NetworkResultant result){
+//		Room room = smartFox.LastJoinedRoom;
+//		ISFSObject data = new SFSObject();
+//		CharPosEffComp.ToSFSObject(result, data);
+//		ExtensionRequest request = new ExtensionRequest("sendCharacterPositionResultant", data, room, true); // True flag = UDP
+//		smartFox.Send(request);	
+//	}
+//	
+//	//Send Control Movement Info
+//	public void SendCharacterPositionMovement(CharPosEffComp.NetworkMoveDirection result){
+//		Room room = smartFox.LastJoinedRoom;
+//		ISFSObject data = new SFSObject();
+//		CharPosEffComp.ToSFSObject(result, data);
+//		ExtensionRequest request = new ExtensionRequest("sendCharacterPositionMovement", data, room, true); // True flag = UDP
+//		smartFox.Send(request);
+//	}
 	
 	//Send Animation State Info
-	public void SendAnimCompState(CharAnimEffComp.NetworkResultantState result){
+//	public void SendAnimCompState(CharAnimEffComp.NetworkResultantState result){
+//		Room room = smartFox.LastJoinedRoom;
+//		ISFSObject data = new SFSObject();
+//	 	result.ToSFSObject(data);
+//		ExtensionRequest request = new ExtensionRequest("sendCharAnimCompState", data, room); // True flag = UDP
+//		smartFox.Send(request);		
+//	}
+	
+	public void SendNetObjSync(ISFSObject data){
 		Room room = smartFox.LastJoinedRoom;
-		ISFSObject data = new SFSObject();
-	 	result.ToSFSObject(data);
-		ExtensionRequest request = new ExtensionRequest("sendCharAnimCompState", data, room); // True flag = UDP
-		smartFox.Send(request);		
+		ExtensionRequest request = new ExtensionRequest("send_obj_sync", data, room); // True flag = UDP
+		smartFox.Send(request);				
+//		Debug.Log ("Sending obj sync");
 	}
 	
 	public void SendTriggerEnter(int colliderId, int targetId){
@@ -145,41 +152,50 @@ public class SFSNetworkManager : MonoBehaviour
 		smartFox.Send(request);
 	}
 	
-	public void SendActorStatus(ISFSObject data){
-		Room room = smartFox.LastJoinedRoom;
-		ExtensionRequest request = new ExtensionRequest("sendActorStatus", data, room);
-		smartFox.Send(request);
-	}
+//	public void SendActorStatus(ISFSObject data){
+//		Room room = smartFox.LastJoinedRoom;
+//		ExtensionRequest request = new ExtensionRequest("sendActorStatus", data, room);
+//		smartFox.Send(request);
+//	}
 	
-	public void HandleActorStatus(ISFSObject data){
-		Debug.Log ("handling actor status msg");
+//	public void HandleActorStatus(ISFSObject data){
+//		Debug.Log ("handling actor status msg");
+//		int userId = data.GetInt("id");
+//		GameObject recipient = PlayerSpawner.Instance.GetRecipient(userId);
+//		if(recipient != null){
+//			if(recipient.GetComponent<ActorStatusRecp>() != null){
+//				recipient.GetComponent<ActorStatusRecp>().ReceiveStatus(data);		
+//			}
+//		}
+//	}
+	
+	public void HandleNetObjSync(ISFSObject data){
+		Debug.Log ("Handling obj sync");
 		int userId = data.GetInt("id");
 		GameObject recipient = PlayerSpawner.Instance.GetRecipient(userId);
 		if(recipient != null){
-			if(recipient.GetComponent<ActorStatusRecp>() != null){
-				recipient.GetComponent<ActorStatusRecp>().ReceiveStatus(data);		
-			}
+			recipient.GetComponent<NetSyncObj>().HandleSync(data);	
 		}
 	}
 	
-	/// <summary>
-	/// Send local animation state to the server
-	/// </summary>
-	/// <param name="message">
-	/// A <see cref="System.String"/>
-	/// </param>
-	/// <param name="layer">
-	/// A <see cref="System.Int32"/>
-	/// </param>
-	public void SendAnimationState(string message, int layer) {
-		Room room = smartFox.LastJoinedRoom;
-		ISFSObject data = new SFSObject();
-		data.PutUtfString("msg", message);
-		data.PutInt("layer", layer);
-		ExtensionRequest request = new ExtensionRequest("sendAnim", data, room);
-		smartFox.Send(request);
-	}
-	
+//	/// <summary>
+//	/// Send local animation state to the server
+//	/// </summary>
+//	/// <param name="message">
+//	/// A <see cref="System.String"/>
+//	/// </param>
+//	/// <param name="layer">
+//	/// A <see cref="System.Int32"/>
+//	/// </param>
+//	public void SendAnimationState(string message, int layer) {
+//		Room room = smartFox.LastJoinedRoom;
+//		ISFSObject data = new SFSObject();
+//		data.PutUtfString("msg", message);
+//		data.PutInt("layer", layer);
+//		ExtensionRequest request = new ExtensionRequest("sendAnim", data, room);
+//		smartFox.Send(request);
+//	}
+//	
 	/// <summary>
 	/// Request the current server time. Used for time synchronization
 	/// </summary>	
@@ -208,38 +224,41 @@ public class SFSNetworkManager : MonoBehaviour
 			if (cmd == "spawnPlayer") {
 				HandleInstantiatePlayer(dt);
 			}
-			else if (cmd == "transform") {
-				//HandleTransform(dt);
-			}
-			else if (cmd == "notransform") {
-				HandleNoTransform(dt);
-			}
-			else if (cmd == "anim") {
-				HandleAnimation(dt);
-			}
-			else if (cmd == "enemyShotFired") {
-				HandleShotFired(dt);
-			}
+//			else if (cmd == "transform") {
+//				//HandleTransform(dt);
+//			}
+//			else if (cmd == "notransform") {
+//				HandleNoTransform(dt);
+//			}
+//			else if (cmd == "anim") {
+//				HandleAnimation(dt);
+//			}
+//			else if (cmd == "enemyShotFired") {
+//				HandleShotFired(dt);
+//			}
 			else if (cmd == "time") {
 				HandleServerTime(dt);
 			}
-			else if (cmd == "reloaded"){
-				HandleReload(dt);
-			}
-			else if (cmd == "character_position_resultant"){
-				HandleCharacterPositionResultant(dt);
-			}
-			else if (cmd == "character_position_movement"){
-				HandleCharacterPositionMovement(dt);
-			}
-			else if (cmd == "charAnimCompState"){
-				HandleCharAnimCompState(dt);	
-			}
+//			else if (cmd == "reloaded"){
+//				HandleReload(dt);
+//			}
+//			else if (cmd == "character_position_resultant"){
+//				HandleCharacterPositionResultant(dt);
+//			}
+//			else if (cmd == "character_position_movement"){
+//				HandleCharacterPositionMovement(dt);
+//			}
+//			else if (cmd == "charAnimCompState"){
+//				HandleCharAnimCompState(dt);	
+//			}
 			else if (cmd == "triggerEnter"){
 				HandleTriggerEnter(dt);	
 			}
-			else if (cmd == "charStatus"){
-				HandleActorStatus(dt);	
+//			else if (cmd == "charStatus"){
+//				HandleActorStatus(dt);	
+//			}
+			else if (cmd == "obj_sync"){
+				HandleNetObjSync(dt);
 			}
 		}
 		catch (Exception e) {
@@ -261,50 +280,50 @@ public class SFSNetworkManager : MonoBehaviour
 		}
 		else {
 			PlayerSpawner.Instance.SpawnEnemy(userId, ntransform, name);
-		}
+		}                                                                                                                                                                                                                                                                                                                                                                                                      
 	}
 	
-	private void HandleCharacterPositionResultant(ISFSObject dt){
-		int userId = dt.GetInt("id");
-		CharacterPositionEffectorComponent.NetworkResultant result = CharacterPositionEffectorComponent.ResultantFromSFSObject(dt);
-		
-		GameObject recipient = PlayerSpawner.Instance.GetRecipient(userId);
-		if(recipient != null){
-			recipient.GetComponent<CharacterPositionReceptor>().ReceiveResultant(result);
-		}
-		
-		if(testRecipient != null){
-			testRecipient.GetComponent<CharacterPositionReceptor>().ReceiveResultant(result);	
-		}
-	}
-	
-	private void HandleCharacterPositionMovement(ISFSObject dt){
-		int userId = dt.GetInt("id");
-		CharacterPositionEffectorComponent.NetworkMoveDirection result = CharacterPositionEffectorComponent.MoveDirFromSFSObject(dt);
-		GameObject recipient = PlayerSpawner.Instance.GetRecipient(userId);
-		if(recipient != null){
-			recipient.GetComponent<CharacterPositionReceptor>().ReceiveMoveDirection(result);
-		}
-	}
-	
-	private void HandleCharAnimCompState(ISFSObject dt){
-		int userId = dt.GetInt("id");
-		CharAnimEffComp.NetworkResultantState result = CharAnimEffComp.NetworkResultantState.FromSFSObject(dt);
-		CharAnimRecp recipient = PlayerSpawner.Instance.GetRecipient(userId).GetComponent<CharAnimRecp>();
-//		Debug.Log ("Receive Anim State: " + result.nameHash + ", slash: " + result.state.Slash + ", slashV: " + result.state.SlashVariant);
-		if(recipient != null){
-			recipient.ReceiveState(result);
-		}
-		else{
-			Debug.LogError("no recipient found");			
-		}
-		
-		if(testRecipient != null){
-			if(testRecipient.GetComponent<CharAnimRecp>() != null){
-				testRecipient.GetComponent<CharAnimRecp>().ReceiveState(result);	
-			}
-		}
-	}
+//	private void HandleCharacterPositionResultant(ISFSObject dt){
+//		int userId = dt.GetInt("id");
+//		CharPosEffComp.NetworkResultant result = CharPosEffComp.ResultantFromSFSObject(dt);
+//		
+//		GameObject recipient = PlayerSpawner.Instance.GetRecipient(userId);
+//		if(recipient != null){
+//			recipient.GetComponent<CharPosRecp>().ReceiveResultant(result);
+//		}
+//		
+//		if(testRecipient != null){
+//			testRecipient.GetComponent<CharPosRecp>().ReceiveResultant(result);	
+//		}
+//	}
+//	
+//	private void HandleCharacterPositionMovement(ISFSObject dt){
+//		int userId = dt.GetInt("id");
+//		CharPosEffComp.NetworkMoveDirection result = CharPosEffComp.MoveDirFromSFSObject(dt);
+//		GameObject recipient = PlayerSpawner.Instance.GetRecipient(userId);
+//		if(recipient != null){
+//			recipient.GetComponent<CharPosRecp>().ReceiveMoveDirection(result);
+//		}
+//	}
+//	
+//	private void HandleCharAnimCompState(ISFSObject dt){
+//		int userId = dt.GetInt("id");
+//		CharAnimEffComp.NetworkResultantState result = CharAnimEffComp.NetworkResultantState.FromSFSObject(dt);
+//		CharAnimRecp recipient = PlayerSpawner.Instance.GetRecipient(userId).GetComponent<CharAnimRecp>();
+////		Debug.Log ("Receive Anim State: " + result.nameHash + ", slash: " + result.state.Slash + ", slashV: " + result.state.SlashVariant);
+//		if(recipient != null){
+//			recipient.ReceiveState(result);
+//		}
+//		else{
+//			Debug.LogError("no recipient found");			
+//		}
+//		
+//		if(testRecipient != null){
+//			if(testRecipient.GetComponent<CharAnimRecp>() != null){
+//				testRecipient.GetComponent<CharAnimRecp>().ReceiveState(result);	
+//			}
+//		}
+//	}
 	
 	private void HandleTriggerEnter(ISFSObject dt){
 		ISFSObject sObj = dt.GetSFSObject("collide_info");
@@ -322,17 +341,17 @@ public class SFSNetworkManager : MonoBehaviour
 		}
 	}
 	
-	// Server rejected transform message - force the local player object to what server said
-	private void HandleNoTransform(ISFSObject dt) {
-		int userId = dt.GetInt("id");
-		NetworkTransform ntransform = NetworkTransform.FromSFSObject(dt);
-		
-		if (userId == smartFox.MySelf.Id) {
-			// Movement restricted!
-			// Update transform of the local object
-			//ntransform.Update(PlayerSpawner.Instance.GetPlayerObject().transform);
-		}
-	}
+//	// Server rejected transform message - force the local player object to what server said
+//	private void HandleNoTransform(ISFSObject dt) {
+//		int userId = dt.GetInt("id");
+//		NetworkTransform ntransform = NetworkTransform.FromSFSObject(dt);
+//		
+//		if (userId == smartFox.MySelf.Id) {
+//			// Movement restricted!
+//			// Update transform of the local object
+//			//ntransform.Update(PlayerSpawner.Instance.GetPlayerObject().transform);
+//		}
+//	}
 	
 	// Synchronize the time from server
 	private void HandleServerTime(ISFSObject dt) {
@@ -340,43 +359,43 @@ public class SFSNetworkManager : MonoBehaviour
 		TimeManager.Instance.Synchronize(Convert.ToDouble(time));
 	}
 	
-	// Synchronizing remote animation
-	private void HandleAnimation(ISFSObject dt) {
-		int userId = dt.GetInt("id");
-		string msg = dt.GetUtfString("msg");
-		int layer = dt.GetInt("layer");
-		
-		if (userId != smartFox.MySelf.Id) {
-			PlayerSpawner.Instance.SyncAnimation(userId, msg, layer);
-		}
-	}
-	
-	// When someon shots handle it and play corresponding animation 
-	private void HandleShotFired(ISFSObject dt) {
-		int userId = dt.GetInt("id");
-		if (userId != smartFox.MySelf.Id) {
-			PlayerSpawner.Instance.SyncAnimation(userId, "Shot", 1);
-		}
-		else {
-		}
-	}
-	
-	// When someone reloaded the weapon - play corresponding animation
-	private void HandleReload(ISFSObject dt) {
-		Debug.Log ("Handle Reload");
-		int userId = dt.GetInt("id");
-		if (userId != smartFox.MySelf.Id) {
-//			SoundManager.Instance.PlayReload(PlayerManager.Instance.GetRecipient(userId).audio);
-			PlayerSpawner.Instance.SyncAnimation(userId, "Reload", 1);
-		}
-		else {
-//			GameObject obj = PlayerManager.Instance.GetPlayerObject();
-//			if (obj == null) return;
-//			
-//			SoundManager.Instance.PlayReload(obj.audio);
-//			obj.GetComponent<AnimationSynchronizer>().PlayReloadAnimation();
-		}
-	}
+//	// Synchronizing remote animation
+//	private void HandleAnimation(ISFSObject dt) {
+//		int userId = dt.GetInt("id");
+//		string msg = dt.GetUtfString("msg");
+//		int layer = dt.GetInt("layer");
+//		
+//		if (userId != smartFox.MySelf.Id) {
+//			PlayerSpawner.Instance.SyncAnimation(userId, msg, layer);
+//		}
+//	}
+//	
+//	// When someon shots handle it and play corresponding animation 
+//	private void HandleShotFired(ISFSObject dt) {
+//		int userId = dt.GetInt("id");
+//		if (userId != smartFox.MySelf.Id) {
+//			PlayerSpawner.Instance.SyncAnimation(userId, "Shot", 1);
+//		}
+//		else {
+//		}
+//	}
+//	
+//	// When someone reloaded the weapon - play corresponding animation
+//	private void HandleReload(ISFSObject dt) {
+//		Debug.Log ("Handle Reload");
+//		int userId = dt.GetInt("id");
+//		if (userId != smartFox.MySelf.Id) {
+////			SoundManager.Instance.PlayReload(PlayerManager.Instance.GetRecipient(userId).audio);
+//			PlayerSpawner.Instance.SyncAnimation(userId, "Reload", 1);
+//		}
+//		else {
+////			GameObject obj = PlayerManager.Instance.GetPlayerObject();
+////			if (obj == null) return;
+////			
+////			SoundManager.Instance.PlayReload(obj.audio);
+////			obj.GetComponent<AnimationSynchronizer>().PlayReloadAnimation();
+//		}
+//	}
 	
 	// When a user leaves room destroy his object
 	private void OnUserLeaveRoom(BaseEvent evt) {

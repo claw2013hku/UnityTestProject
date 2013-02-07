@@ -22,7 +22,7 @@ public class ActorStatusRecp : MonoBehaviour {
 	}
 	
 	public void ReceiveStatus(ISFSObject sObj){
-		ISFSObject statusObj = sObj.GetSFSObject("charStatus");
+		ISFSObject statusObj = sObj.GetSFSObject(NetSyncObjCharacter.statusDS);
 			
 		if(statusObj.ContainsKey("currentHP")){
 			component.HP = statusObj.GetFloat("currentHP");

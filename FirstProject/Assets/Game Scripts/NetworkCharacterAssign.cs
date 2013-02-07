@@ -26,11 +26,11 @@ public class NetworkCharacterAssign : MonoBehaviour {
 			
 			NetworkCharacterTest _NetworkCharacterTest2 = GetComponent<NetworkCharacterTest>();
 			_NetworkCharacterTest2.enabled = true;
-			_NetworkCharacterTest2.slashHitbox = GetComponent<MovesControllerTest>().slashHitbox;
+			_NetworkCharacterTest2.slashHitbox = GetComponent<HitboxController>().slashHitbox;
 			
 			NetworkCharacterReliableTest _NetworkCharacterReliableTest2 = GetComponent<NetworkCharacterReliableTest>();
 			_NetworkCharacterReliableTest2.enabled = true;
-			_NetworkCharacterReliableTest2.slashHitbox = GetComponent<MovesControllerTest>().slashHitbox;
+			_NetworkCharacterReliableTest2.slashHitbox = GetComponent<HitboxController>().slashHitbox;
 			
 			GameObject mainCamera = GameObject.FindWithTag("MainCamera");
 			if(mainCamera == null){
@@ -63,15 +63,15 @@ public class NetworkCharacterAssign : MonoBehaviour {
 			name += "Remote";
 			NetworkCharacterTest _NetworkCharacterTest2 = GetComponent<NetworkCharacterTest>();
 			_NetworkCharacterTest2.enabled = true;
-			_NetworkCharacterTest2.slashHitbox = GetComponent<MovesControllerTest>().slashHitbox;
+			_NetworkCharacterTest2.slashHitbox = GetComponent<HitboxController>().slashHitbox;
 			
 			NetworkCharacterReliableTest _NetworkCharacterReliableTest2 = GetComponent<NetworkCharacterReliableTest>();
 			_NetworkCharacterReliableTest2.enabled = true;
-			_NetworkCharacterReliableTest2.slashHitbox = GetComponent<MovesControllerTest>().slashHitbox;
+			_NetworkCharacterReliableTest2.slashHitbox = GetComponent<HitboxController>().slashHitbox;
 //			NetworkTransform _NetworkTransform = GetComponent<NetworkTransform>();
 //			_NetworkTransform.enabled = true;
 			
-			MovesControllerTest _MovesController = GetComponent<MovesControllerTest>();
+			HitboxController _MovesController = GetComponent<HitboxController>();
 			_MovesController.enabled = false;
 			
 			TestCharacterMotor _TestCharacterMotor = GetComponent<TestCharacterMotor>();

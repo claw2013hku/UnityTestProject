@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using Sfs2X.Entities.Data;
 
 [RequireComponent (typeof(CharAnimEffComp))]
 
@@ -41,7 +42,9 @@ public class CharAnimSend : MonoBehaviour {
 					pendingSend = false;
 				}
 				CharAnimEffComp.NetworkResultantState.FromComponent(component, ref lastState);
-				SFSNetworkManager.Instance.SendAnimCompState(lastState);
+				ISFSObject data = new SFSObject();
+				lastState.ToSFSObject(data);
+				SFSNetworkManager.Instance.SendNetObjSync(data);
 				timeLastSendingState = 0;
 				return;
 			}

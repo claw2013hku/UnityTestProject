@@ -103,12 +103,12 @@ public class CharAnimEffComp : MonoBehaviour {
 			tr.PutInt("SlashVariant", state.SlashVariant);
 			tr.PutLong("t", Convert.ToInt64(0));
 				
-			data.PutSFSObject("charAnimCompState", tr);	
+			data.PutSFSObject(NetSyncObjCharacter.animDS, tr);	
 		}
 		
 		public static NetworkResultantState FromSFSObject(ISFSObject data){
 			NetworkResultantState md = new NetworkResultantState();
-			ISFSObject animObj = data.GetSFSObject("charAnimCompState");
+			ISFSObject animObj = data.GetSFSObject(NetSyncObjCharacter.animDS);
 			
 			int nameHash = animObj.GetInt("nameHash");
 			md.nameHash = nameHash;

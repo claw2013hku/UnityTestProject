@@ -5,7 +5,7 @@ using Sfs2X.Entities.Data;
 
 //Stores base stats, modifiers, modified stats
 //Fires (resulting) base stats changed event, modifiers changed event, modified stats changed event
-public class CharacterPositionEffectorComponent : MonoBehaviour {	
+public class CharPosEffComp : MonoBehaviour {	
 	//Base stats
 	public Vector3 moveDirection;
 	public Vector3 MoveDirection {set {if(value != moveDirection){ if(HasChangedMoveDirection != null){HasChangedMoveDirection(moveDirection, value);} moveDirection = value;}} get {return moveDirection;}} 
@@ -42,7 +42,7 @@ public class CharacterPositionEffectorComponent : MonoBehaviour {
 		
 		tr.PutLong("t", Convert.ToInt64(0));
 			
-		data.PutSFSObject("character_position_resultant", tr);	
+		data.PutSFSObject(NetSyncObjCharacter.posDS, tr);	
 	}
 	
 	public static void ToSFSObject(NetworkMoveDirection result, ISFSObject data){
@@ -53,7 +53,7 @@ public class CharacterPositionEffectorComponent : MonoBehaviour {
 		
 		tr.PutLong("t", Convert.ToInt64(0));
 			
-		data.PutSFSObject("character_position_movement", tr);	
+		data.PutSFSObject(NetSyncObjCharacter.movDS, tr);	
 	}
 
 	//Network counterparts
@@ -98,12 +98,12 @@ public class CharacterPositionEffectorComponent : MonoBehaviour {
 			}
 		}
 			
-		public bool IsDifferent(CharacterPositionEffectorComponent comp, float accuracy) {
+		public bool IsDifferent(CharPosEffComp comp, float accuracy) {
 			float posDif = Vector3.Distance(this.moveDirection, comp.MoveDirection);
 			return (posDif>accuracy);
 		}
 		
-		public static NetworkMoveDirection FromComponent(CharacterPositionEffectorComponent comp){
+		public static NetworkMoveDirection FromComponent(CharPosEffComp comp){
 			NetworkMoveDirection d = new NetworkMoveDirection();
 			d.moveDirection = comp.MoveDirection;
 			return d;
@@ -174,14 +174,14 @@ public class CharacterPositionEffectorComponent : MonoBehaviour {
 			result.velocity = buffer[index].velocity;
 		}
 		
-		public bool IsDifferent(CharacterPositionEffectorComponent result, float accuracy) {
+		public bool IsDifferent(CharPosEffComp result, float accuracy) {
 			float posDif = Vector3.Distance(this.position, result.ResultantPosition);
 			float angDif = Vector3.Distance(this.rotation.eulerAngles, result.ResultantQuaternion.eulerAngles);
 			
 			return (posDif>accuracy || angDif > accuracy);
 		}
 		
-		public static NetworkResultant FromComponent(CharacterPositionEffectorComponent comp){
+		public static NetworkResultant FromComponent(CharPosEffComp comp){
 			NetworkResultant result = new NetworkResultant();
 			result.position = comp.ResultantPosition;
 			result.velocity = comp.ResultantVelocity;
@@ -192,7 +192,7 @@ public class CharacterPositionEffectorComponent : MonoBehaviour {
 
 	public static NetworkMoveDirection MoveDirFromSFSObject(ISFSObject data){
 		NetworkMoveDirection md = new NetworkMoveDirection();
-		ISFSObject transformData = data.GetSFSObject("character_position_movement");
+		ISFSObject transformData = data.GetSFSObject(NetSyncObjCharacter.movDS);
 		
 		float x = Convert.ToSingle(transformData.GetDouble("x"));
 		float y = Convert.ToSingle(transformData.GetDouble("y"));
@@ -211,7 +211,7 @@ public class CharacterPositionEffectorComponent : MonoBehaviour {
 	
 	public static NetworkResultant ResultantFromSFSObject(ISFSObject data){
 		NetworkResultant trans = new NetworkResultant();
-		ISFSObject transformData = data.GetSFSObject("character_position_resultant");
+		ISFSObject transformData = data.GetSFSObject(NetSyncObjCharacter.posDS);
 		
 		float x = Convert.ToSingle(transformData.GetDouble("x"));
 		float y = Convert.ToSingle(transformData.GetDouble("y"));

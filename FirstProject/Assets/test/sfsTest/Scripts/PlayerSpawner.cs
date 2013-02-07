@@ -37,16 +37,30 @@ public class PlayerSpawner : MonoBehaviour {
 	}
 	
 	void Start(){
-//		recipients.Add(1, tent1);
-//		tent1.GetComponent<NetSyncObj>().ID = 1;
-//		recipients.Add(2, tent2);
-//		tent2.GetComponent<NetSyncObj>().ID = 2;
-//		recipients.Add(3, trigger);
-//		trigger.GetComponent<NetSyncObj>().ID = 3;
-//		recipients.Add(4, gate1);
-//		gate1.GetComponent<NetSyncObj>().ID = 4;
-//		recipients.Add(5, gate2);
-//		gate2.GetComponent<NetSyncObj>().ID = 5;
+		if(tent1 != null){
+			recipients.Add(-1, tent1);
+			tent1.GetComponent<NetSyncObj>().ID = -1;
+		}
+		
+		if(tent2 != null){
+			recipients.Add(-2, tent2);
+			tent2.GetComponent<NetSyncObj>().ID = -2;
+		}
+		
+		if(trigger != null){
+			recipients.Add(-3, trigger);
+			trigger.GetComponent<NetSyncObj>().ID = -3;
+		}
+		
+		if(gate1 != null){
+			recipients.Add(-4, gate1);
+			gate1.GetComponent<NetSyncObj>().ID = -4;
+		}
+		
+		if(gate2 != null){
+			recipients.Add(-5, gate2);
+			gate2.GetComponent<NetSyncObj>().ID = -5;
+		}
 	}
 
 	public void SpawnPlayer(int id, NetworkTransform ntransform, string name) {
