@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SlashHitTest : NetHitbox {
 	public GameObject owner;
-	
+
 	public bool applyForceOnDeath = true;
 	public Transform explosionPosition;
 	public float explosionForce = 50f;
@@ -17,7 +17,7 @@ public class SlashHitTest : NetHitbox {
 	
 	// Use this for initialization
 	void Start () {
-	
+		
 	}
 	
 	// Update is called once per frame
@@ -35,6 +35,14 @@ public class SlashHitTest : NetHitbox {
 		
 		NetSyncObj nObj = col.GetComponent<NetSyncObj>();
 		if(nObj == null) return;
+		
+		ActorStatusComponent actComp = col.GetComponent<ActorStatusComponent>();
+		if(actComp != null){
+			if(actComp.Team == owner.GetComponent<ActorStatusComponent>().Team){
+				Debug.Log ("same team");
+				return;	
+			}
+		}
 		
 		Debug.Log ("Sending Trigger Enter Message, collider ID: " + ID + ", obj ID: " + nObj.ID);
 		SFSNetworkManager.Instance.SendTriggerEnter(ID, nObj.ID);

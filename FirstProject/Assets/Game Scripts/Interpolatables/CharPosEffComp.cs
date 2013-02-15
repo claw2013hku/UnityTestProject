@@ -153,18 +153,22 @@ public class CharPosEffComp : MonoBehaviour {
 			// s = ut + 0.5at^2
 			Vector3 backwardsDistance = rhs.velocity * backwardsTime + 0.5f * backwardsAcceleration * backwardsTime * backwardsTime;
 			// compensation between normal interpolation and velocity interpolation
-			if(backwardsDistance.sqrMagnitude > (rhs.position - lhs.position).sqrMagnitude){
-				backwardsDistance *= ((rhs.position - lhs.position).magnitude / backwardsDistance.magnitude);
-			}
+//			if(backwardsDistance.sqrMagnitude > 0){// > (rhs.position - lhs.position).sqrMagnitude){
+//				backwardsDistance *= ((rhs.position - lhs.position).magnitude / backwardsDistance.magnitude);
+//			}
 			result.position = rhs.position - backwardsDistance;
 			// v = u + at;
 			result.velocity = rhs.velocity + backwardsAcceleration * backwardsTime;
 			
 			float t = 0.0F;
 			if (length > 0.0001f) {
-				t = (float)((interpolationTime - lhs.timeStamp) / length);
+				t = (float)(((interpolationTime - lhs.timeStamp / 1000)) / length);
 			}
-	
+//			Debug.Log ("t: " + t + ", t diff: " + (rhs.timeStamp - lhs.timeStamp));
+			Vector3 normalInterPos = Vector3.Lerp(lhs.position, rhs.position, t);
+			if(result.position != normalInterPos){
+				result.position = Vector3.Lerp(normalInterPos, result.position, 0.5f);
+			}
 			result.rotation = Quaternion.Lerp(lhs.rotation, rhs.rotation, t);
 		}
 		

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sfs2X.Entities.Data;
 
 // Spawns player and items objects, stores them in collections and provides access to them
 public class PlayerSpawner : MonoBehaviour {
@@ -60,13 +61,9 @@ public class PlayerSpawner : MonoBehaviour {
 			gate2.ID = -5;
 		}
 	}
-
-	public void SpawnPlayer(int id, NetworkTransform ntransform, string name) {	
-		playerObj = GameObject.Instantiate(playerPrefab) as GameObject;
-		playerObj.transform.position = ntransform.Position;
-		playerObj.transform.localEulerAngles = ntransform.AngleRotationFPS;
-		playerObj.SendMessage("StartSendTransform");			
 	
+	public void SpawnPlayer(int id, string name, ISFSObject data){
+		playerObj = GameObject.Instantiate(playerPrefab) as GameObject;
 		RemotePlayer remotePlayer = playerObj.GetComponent<RemotePlayer>();
 		remotePlayer.Init(name);
 		
@@ -79,13 +76,34 @@ public class PlayerSpawner : MonoBehaviour {
 			recipients[assignId] = nObj;
 			Debug.Log ("Assigned Id: " + assignId);
 			assignId += 1000;
-		}	
+		}
+		
+		playerObj.GetComponent<NetSyncObj>().HandleInit(data);
 	}
 	
-	public void SpawnEnemy(int id, NetworkTransform ntransform, string name) {
+//	public void SpawnPlayer(int id, NetworkTransform ntransform, string name) {	
+//		playerObj = GameObject.Instantiate(playerPrefab) as GameObject;
+//		playerObj.transform.position = ntransform.Position;
+//		playerObj.transform.localEulerAngles = ntransform.AngleRotationFPS;
+//		playerObj.SendMessage("StartSendTransform");			
+//	
+//		RemotePlayer remotePlayer = playerObj.GetComponent<RemotePlayer>();
+//		remotePlayer.Init(name);
+//		
+//		CameraMode cameraMode = Camera.main.GetComponent<CameraMode>();
+//		cameraMode.FocusTransform(playerObj);
+//		
+//		int assignId = id;
+//		foreach(NetSyncObj nObj in playerObj.GetComponentsInChildren<NetSyncObj>(true)){
+//			nObj.ID = assignId;
+//			recipients[assignId] = nObj;
+//			Debug.Log ("Assigned Id: " + assignId);
+//			assignId += 1000;
+//		}	
+//	}
+	
+	public void SpawnEnemy(int id, string name, ISFSObject data) {
 		GameObject playerObj = GameObject.Instantiate(enemyPrefab) as GameObject;
-		playerObj.transform.position = ntransform.Position;
-		playerObj.transform.localEulerAngles = ntransform.AngleRotationFPS;
 				
 		RemotePlayer remotePlayer = playerObj.GetComponent<RemotePlayer>();
 		remotePlayer.Init(name);
@@ -97,7 +115,26 @@ public class PlayerSpawner : MonoBehaviour {
 			Debug.Log ("Assigned Id: " + assignId);
 			assignId += 1000;
 		}
+		
+		playerObj.GetComponent<NetSyncObj>().HandleInit(data);
 	}
+	
+//	public void SpawnEnemy(int id, NetworkTransform ntransform, string name) {
+//		GameObject playerObj = GameObject.Instantiate(enemyPrefab) as GameObject;
+//		playerObj.transform.position = ntransform.Position;
+//		playerObj.transform.localEulerAngles = ntransform.AngleRotationFPS;
+//				
+//		RemotePlayer remotePlayer = playerObj.GetComponent<RemotePlayer>();
+//		remotePlayer.Init(name);
+//		
+//		int assignId = id;
+//		foreach(NetSyncObj nObj in playerObj.GetComponentsInChildren<NetSyncObj>(true)){
+//			nObj.ID = id;
+//			recipients[assignId] = nObj;
+//			Debug.Log ("Assigned Id: " + assignId);
+//			assignId += 1000;
+//		}
+//	}
 	
 	public NetSyncObj GetRecipient(int id) {
 		if (recipients.ContainsKey(id)) {

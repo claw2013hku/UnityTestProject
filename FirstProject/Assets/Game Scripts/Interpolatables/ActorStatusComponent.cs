@@ -8,7 +8,7 @@ public class ActorStatusComponent : MonoBehaviour {
 	public enum ActorType {Test};
 	private ActorType type;
 	public ActorType Type {set {if (value != type){HasChangedType(type, value); type = value;}} get {return type;}}
-	public enum StatusType {TYPE, MAXHP, HP, MOVESPEED, DAMAGE, ATTACKSPEED}
+	public enum StatusType {TYPE, MAXHP, HP, MOVESPEED, DAMAGE, ATTACKSPEED, TEAM}
 	public float baseMaxHP = 1f; 
 	public float BaseMaxHP {set {if(value != baseMaxHP){if(HasChangedStatus != null) HasChangedStatus(true, StatusType.MAXHP, baseMaxHP, value); baseMaxHP = value;}} get {return baseMaxHP;}}
 	public float baseHP = 1f;
@@ -19,6 +19,8 @@ public class ActorStatusComponent : MonoBehaviour {
 	public float BaseDamage {set {if(value != baseDamage){if(HasChangedStatus != null) HasChangedStatus(true, StatusType.DAMAGE, baseDamage, value); baseDamage = value;}} get {return baseDamage;}}
 	public float baseAttackSpeed = 1f;
 	public float BaseAttackSpeed {set {if(value != baseAttackSpeed){if(HasChangedStatus != null) HasChangedStatus(true, StatusType.ATTACKSPEED, baseAttackSpeed, value); baseAttackSpeed = value;}} get {return baseAttackSpeed;}}
+	public int team = 0;
+	public int Team {set {if (value != team){if(HasChangedStatus != null) HasChangedStatus(false, StatusType.TEAM, team, value); team = value;}} get {return team;}}
 	
 	//Modifiers
 	private float[] maxHPModifiers = {0, 1, 0, 1};

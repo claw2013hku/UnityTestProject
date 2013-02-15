@@ -11,7 +11,7 @@ public class NetSyncObjCharacter : NetSyncObj {
 	private CharPosRecp posRecp;
 	private CharAnimRecp animRecp;
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		statusRecp = GetComponent<ActorStatusRecp>();
 		posRecp = GetComponent<CharPosRecp>();
 		animRecp = GetComponent<CharAnimRecp>();
@@ -27,20 +27,55 @@ public class NetSyncObjCharacter : NetSyncObj {
 		//Debug.Log ("Character Handling Sync");
 		if(mode == SFSNetworkManager.Mode.LOCAL) return;
 		
+		bool consumed = false;
+		
 		if(obj.ContainsKey(statusDS)){
 			statusRecp.ReceiveStatus(obj);
+			consumed = true;
 		}
-		else if (obj.ContainsKey(posDS)){
+		
+		if (obj.ContainsKey(posDS)){
 			posRecp.ReceiveResultant(obj);
+			consumed = true;
 		}
-		else if (obj.ContainsKey(movDS)){
+		
+		if (obj.ContainsKey(movDS)){
 			posRecp.ReceiveMoveDirection(obj);
+			consumed = true;
 		}
-		else if (obj.ContainsKey(animDS)){
+		
+		if (obj.ContainsKey(animDS)){
+			Debug.Log("Received animation update");
 			animRecp.ReceiveState(obj);
+			consumed = true;
 		}
-		else{
+		
+		if(!consumed){
 			Debug.LogError("Unhandled sync");	
+		}
+	}
+	
+	public override void HandleInit (Sfs2X.Entities.Data.ISFSObject obj)
+	{
+		bool consumed = false;
+		
+		if(obj.ContainsKey(statusDS)){
+			statusRecp.ReceiveStatus(obj);
+			consumed = true;
+		}
+		
+		if (obj.ContainsKey(posDS)){
+			posRecp.ReceiveResultant(obj, true);
+			consumed = true;
+		}
+//		else if (obj.ContainsKey(movDS)){
+//			posRecp.ReceiveMoveDirection(obj);
+//		}
+//		else if (obj.ContainsKey(animDS)){
+//			animRecp.ReceiveState(obj);
+//		}
+		if(!consumed){
+			Debug.LogError("Unhandled init");	
 		}
 	}
 }

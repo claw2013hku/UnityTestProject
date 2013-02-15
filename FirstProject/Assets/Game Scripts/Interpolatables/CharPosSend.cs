@@ -6,6 +6,7 @@ using Sfs2X.Entities.Data;
 
 public class CharPosSend : MonoBehaviour {
 	private CharPosEffComp component;
+	private NetSyncObjCharacter syncObj;
 	
 	public SFSNetworkManager.Mode mode = SFSNetworkManager.Mode.LOCAL;
 	
@@ -21,6 +22,7 @@ public class CharPosSend : MonoBehaviour {
 	
 	void Start() {
 		component = GetComponent<CharPosEffComp>();
+		syncObj = GetComponent<NetSyncObjCharacter>();
 	}
 	
 	void FixedUpdate() { 
@@ -38,8 +40,10 @@ public class CharPosSend : MonoBehaviour {
 				lastResultState = CharPosEffComp.NetworkResultant.FromComponent(component);
 				ISFSObject data = new SFSObject();
 				CharPosEffComp.ToSFSObject(lastResultState, data);
+				data.PutInt("id", syncObj.ID);
 				SFSNetworkManager.Instance.SendNetObjSync(data);
 				timeLastSendingPos = 0;
+				//Debug.Log("sending pos msg, id: " + syncObj.ID);
 				return;
 			}
 		//}
@@ -52,6 +56,7 @@ public class CharPosSend : MonoBehaviour {
 				lastMoveState = CharPosEffComp.NetworkMoveDirection.FromComponent(component);
 				ISFSObject data = new SFSObject();
 				CharPosEffComp.ToSFSObject(lastMoveState, data);
+				data.PutInt("id", syncObj.ID);
 				SFSNetworkManager.Instance.SendNetObjSync(data);
 				timeLastSendingMove = 0;
 				return;

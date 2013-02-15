@@ -9,6 +9,7 @@ using Sfs2X.Logging;
 
 public class ActorStatusSend : MonoBehaviour {
 	private ActorStatusComponent component;
+	private NetSyncObjCharacter syncObj;
 	
 	private bool pendingSend = false;
 	private bool sendHP = false;
@@ -17,6 +18,7 @@ public class ActorStatusSend : MonoBehaviour {
 	void Start () {
 		component = GetComponent<ActorStatusComponent>();
 		component.HasChangedStatus += HandleComponentHasChangedStatus;
+		syncObj = GetComponent<NetSyncObjCharacter>();
 	}
 
 	void HandleComponentHasChangedStatus (bool isBase, ActorStatusComponent.StatusType type, float oldVal, float newVal)
@@ -45,6 +47,7 @@ public class ActorStatusSend : MonoBehaviour {
 			tr.PutFloat("currentHP", component.HP);	
 		}	
 		data.PutSFSObject(NetSyncObjCharacter.statusDS, tr);
+		data.PutInt("id", syncObj.ID);
 		SFSNetworkManager.Instance.SendNetObjSync(data);
 	}
 }

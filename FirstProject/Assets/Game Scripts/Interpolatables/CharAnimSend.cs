@@ -6,6 +6,7 @@ using Sfs2X.Entities.Data;
 
 public class CharAnimSend : MonoBehaviour {
 	private CharAnimEffComp component;
+	private NetSyncObjCharacter syncObj;
 	
 	public SFSNetworkManager.Mode mode = SFSNetworkManager.Mode.LOCAL;
 	
@@ -22,6 +23,7 @@ public class CharAnimSend : MonoBehaviour {
 	void Start () {
 		component = GetComponent<CharAnimEffComp>();
 		component.HasChangedAnimState += ChangedState;
+		syncObj = GetComponent<NetSyncObjCharacter>();
 		//component.HasChangedAnimHash += ChangedHash;
 	}
 
@@ -37,6 +39,7 @@ public class CharAnimSend : MonoBehaviour {
 	void SendState(){
 		//if(lastState.nameHash != component.StateInfoNameHash){
 			if (timeLastSendingState >= sendingPeriod || pendingSend) {
+			//if (pendingSend) {
 				if(pendingSend){
 					//Debug.Log ("pend send");
 					pendingSend = false;
@@ -44,6 +47,7 @@ public class CharAnimSend : MonoBehaviour {
 				CharAnimEffComp.NetworkResultantState.FromComponent(component, ref lastState);
 				ISFSObject data = new SFSObject();
 				lastState.ToSFSObject(data);
+				data.PutInt("id", syncObj.ID);
 				SFSNetworkManager.Instance.SendNetObjSync(data);
 				timeLastSendingState = 0;
 				return;

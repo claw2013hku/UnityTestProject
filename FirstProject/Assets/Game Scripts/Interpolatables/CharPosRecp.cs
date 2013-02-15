@@ -76,14 +76,24 @@ public class CharPosRecp : MonoBehaviour {
 		}
 	}
 	
-	public void ReceiveResultant(ISFSObject obj){
+	public void ReceiveResultant(ISFSObject obj, bool clearBuffer = false){
 		if(obj.ContainsKey("char_pos")){
+			if(clearBuffer){
+				if(resultantInterpolator != null){
+					resultantInterpolator.ClearBuffer();	
+				}
+			}
 			ReceiveResultant(CharPosEffComp.ResultantFromSFSObject(obj));	
 		}
 	}
 	
-	public void ReceiveMoveDirection(ISFSObject obj){
+	public void ReceiveMoveDirection(ISFSObject obj, bool clearBuffer = false){
 		if(obj.ContainsKey("char_mov")){
+			if(clearBuffer){
+				if(moveDirInterpolator != null){
+					moveDirInterpolator.ClearBuffer();	
+				}
+			}
 			ReceiveMoveDirection(CharPosEffComp.MoveDirFromSFSObject(obj));	
 		}
 	}
@@ -91,6 +101,7 @@ public class CharPosRecp : MonoBehaviour {
 	public void ReceiveResultant(CharPosEffComp.NetworkResultant ntr){
 		if(SFSNetworkManager.Mode.REMOTE == mode || SFSNetworkManager.Mode.PREDICT == mode){
 			if(resultantInterpolator != null){
+//				Debug.Log("received pos: transform: " + ntr.position + ", velocity: " + ntr.velocity + ", time: " + ntr.timeStamp);
 				resultantInterpolator.ReceivedItem(ntr);		
 			}
 		}

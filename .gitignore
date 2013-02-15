@@ -2,17 +2,27 @@
 #     Store this file at the root of your local repository.
 .DS_Store
 AssetImportState/
+AssetImportState
 AssetServerCacheV3/
+AssetServerCacheV3
 FailedAssetImports.txt
 ScriptAssemblies/
+ScriptAssemblies
 ScriptMapper/
+ScriptMapper
 assetDatabase3/
+assetDatabase3
 cache/
 expandedItems/
 metadata/
 previews/
 guidmapper/
+guidmapper
 Temp/
+Temp2/
 *.pidb
+*.sln
+*.csproj
+*.unityproj
 build/
 Sample Assets/*

@@ -8,16 +8,34 @@ public class RemotePlayerInfo : MonoBehaviour
 {
 	public TextMesh name;
 	public Color color;
+	public Color team1Color;
+	public Color team2Color;
 	
 	private Renderer[] renderers;
 	
 	void Awake() {
-		renderers = this.GetComponentsInChildren<Renderer>();
+		renderers = GetComponentsInChildren<Renderer>();
+		transform.root.gameObject.GetComponent<ActorStatusComponent>().HasChangedStatus += HandleHasChangedStatus;
 		SetColor(color);
+	}
+
+	void HandleHasChangedStatus (bool isBase, ActorStatusComponent.StatusType type, float oldVal, float newVal){
+		if(type == ActorStatusComponent.StatusType.TEAM){
+			SetColor((int)newVal);	
+		}
 	}
 	
 	public void SetName(string name) {
 		this.name.text = name;
+	}
+	
+	public void SetColor(int i){
+		if(i == 1){
+			SetColor(team1Color);	
+		}
+		else if (i == 2){
+			SetColor(team2Color);	
+		}
 	}
 	
 	public void SetColor(Color _color){

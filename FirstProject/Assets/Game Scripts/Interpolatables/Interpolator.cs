@@ -56,6 +56,9 @@ public class Interpolator<T> where T: Interpolatable<T>, new() {
 		}
 	}
 	
+	public void ClearBuffer(){
+		m_TimestampCount = 0;	
+	}
 	
 	// We have a window of interpolationBackTime where we basically play 
 	// By having interpolationBackTime the average ping, you will usually use interpolation.
