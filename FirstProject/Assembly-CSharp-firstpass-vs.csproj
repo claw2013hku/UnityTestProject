@@ -44,20 +44,6 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Plugins\Game Scripts\AimCamera.cs" />
-     <Compile Include="Assets\Plugins\Game Scripts\CameraFocus.cs" />
-     <Compile Include="Assets\Plugins\Game Scripts\CameraMode.cs" />
-     <Compile Include="Assets\Plugins\Game Scripts\ControlSchemeInterface.cs" />
-     <Compile Include="Assets\Plugins\Game Scripts\GameCamera.cs" />
-     <Compile Include="Assets\Plugins\Game Scripts\NetworkAnimation.cs" />
-     <Compile Include="Assets\Plugins\Game Scripts\NetworkRigidbody.cs" />
-     <Compile Include="Assets\Plugins\Game Scripts\NetworkTransform.cs" />
-     <Compile Include="Assets\Plugins\NewCoconutThrower.cs" />
-     <Compile Include="Assets\Plugins\SimpleCamera.cs" />
-     <Compile Include="Assets\Plugins\ThirdPersonTouchController.cs" />
-     <Compile Include="Assets\Plugins\test\IHitBox.cs" />
-     <Compile Include="Assets\Plugins\test\NetworkCharacterReliableTest.cs" />
-     <Compile Include="Assets\Plugins\test\NetworkCharacterTest.cs" />
      <Compile Include="Assets\Standard Assets\Character Controllers\Sources\Scripts\MouseLook.cs" />
      <Compile Include="Assets\Standard Assets\Image Effects (Pro Only)\BlurEffect.cs" />
      <Compile Include="Assets\Standard Assets\Image Effects (Pro Only)\ColorCorrectionEffect.cs" />
@@ -118,6 +104,7 @@
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\CameraMotionBlur.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_Antialiasing\DLAA.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\NoiseAndGrainDX11.shader" />
+     <None Include="Assets\Standard Assets\Shaders\DifSpecTransp.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\BrightPassFilter2.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_DepthOfField\SeparableBlur.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\MotionBlurClear.shader" />

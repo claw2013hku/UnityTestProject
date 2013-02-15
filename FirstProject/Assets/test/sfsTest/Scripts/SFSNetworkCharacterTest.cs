@@ -7,7 +7,7 @@ public class SFSNetworkCharacterTest : MonoBehaviour {
 	public double m_ExtrapolationLimit = 0.5;
 	
 	protected Animator animator;
-	public IHitBox slashHitbox;
+	public NetHitbox slashHitbox;
 	
 	private string idleAnimationName = "Base Layer.Idle";
 	private int idleAnimationNameHash;

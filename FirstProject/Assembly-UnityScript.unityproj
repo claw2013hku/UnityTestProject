@@ -44,16 +44,10 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Game Scripts\NetworkCharacterAssignjs.js" />
-     <Compile Include="Assets\Game Scripts\NetworkInstantiate.js" />
-     <Compile Include="Assets\NetworkFiles\MasterServerGUI.js" />
-     <Compile Include="Assets\NetworkFiles\NetworkLevelLoad.js" />
      <Compile Include="Assets\Scripts\CharacterMotor.js" />
      <Compile Include="Assets\Scripts\FPSInputController.js" />
      <Compile Include="Assets\Scripts\Instantiate.js" />
      <Compile Include="Assets\Scripts\PlatformInputController.js" />
-     <Compile Include="Assets\Scripts\RigidAssign.js" />
-     <Compile Include="Assets\Scripts\TestAssign.js" />
      <Compile Include="Assets\Scripts\ThirdPersonCamera.js" />
      <Compile Include="Assets\Scripts\newThirdPersonCamera.js" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\BlendOneOne.shader" />
@@ -100,6 +94,7 @@
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\CameraMotionBlur.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_Antialiasing\DLAA.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\NoiseAndGrainDX11.shader" />
+     <None Include="Assets\Standard Assets\Shaders\DifSpecTransp.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\BrightPassFilter2.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_DepthOfField\SeparableBlur.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\MotionBlurClear.shader" />

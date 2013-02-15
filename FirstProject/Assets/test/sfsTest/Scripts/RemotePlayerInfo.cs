@@ -7,15 +7,22 @@ using UnityEngine;
 public class RemotePlayerInfo : MonoBehaviour
 {
 	public TextMesh name;
+	public Color color;
 	
 	private Renderer[] renderers;
 	
 	void Awake() {
 		renderers = this.GetComponentsInChildren<Renderer>();
+		SetColor(color);
 	}
 	
 	public void SetName(string name) {
 		this.name.text = name;
+	}
+	
+	public void SetColor(Color _color){
+		color = _color;
+		name.renderer.material.color = _color;
 	}
 	
 	public void Hide() {

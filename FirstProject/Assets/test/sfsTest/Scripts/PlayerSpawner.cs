@@ -22,15 +22,13 @@ public class PlayerSpawner : MonoBehaviour {
 		return playerObj;
 	}
 	
-	public GameObject tent1;
-	public GameObject tent2;
-	public GameObject trigger;
-	public GameObject gate1;
-	public GameObject gate2;
+	public NetSyncObj tent1;
+	public NetSyncObj tent2;
+	public NetSyncObj trigger;
+	public NetSyncObj gate1;
+	public NetSyncObj gate2;
 	
-	private Dictionary<int, GameObject> recipients = new Dictionary<int, GameObject>();
-	private Dictionary<int, GameObject> items = new Dictionary<int, GameObject>();
-	private Dictionary<int, SlashHitTest> colliders = new Dictionary<int, SlashHitTest>();
+	private Dictionary<int, NetSyncObj> recipients = new Dictionary<int, NetSyncObj>();
 	
 	void Awake() {
 		instance = this;
@@ -39,35 +37,31 @@ public class PlayerSpawner : MonoBehaviour {
 	void Start(){
 		if(tent1 != null){
 			recipients.Add(-1, tent1);
-			tent1.GetComponent<NetSyncObj>().ID = -1;
+			tent1.ID = -1;
 		}
 		
 		if(tent2 != null){
 			recipients.Add(-2, tent2);
-			tent2.GetComponent<NetSyncObj>().ID = -2;
+			tent2.ID = -2;
 		}
 		
 		if(trigger != null){
 			recipients.Add(-3, trigger);
-			trigger.GetComponent<NetSyncObj>().ID = -3;
+			trigger.ID = -3;
 		}
 		
 		if(gate1 != null){
 			recipients.Add(-4, gate1);
-			gate1.GetComponent<NetSyncObj>().ID = -4;
+			gate1.ID = -4;
 		}
 		
 		if(gate2 != null){
 			recipients.Add(-5, gate2);
-			gate2.GetComponent<NetSyncObj>().ID = -5;
+			gate2.ID = -5;
 		}
 	}
 
-	public void SpawnPlayer(int id, NetworkTransform ntransform, string name) {
-//		if (Camera.main!=null) {
-//			Destroy(Camera.main.gameObject);
-//		}
-			
+	public void SpawnPlayer(int id, NetworkTransform ntransform, string name) {	
 		playerObj = GameObject.Instantiate(playerPrefab) as GameObject;
 		playerObj.transform.position = ntransform.Position;
 		playerObj.transform.localEulerAngles = ntransform.AngleRotationFPS;
@@ -78,21 +72,14 @@ public class PlayerSpawner : MonoBehaviour {
 		
 		CameraMode cameraMode = Camera.main.GetComponent<CameraMode>();
 		cameraMode.FocusTransform(playerObj);
-		recipients[id] = playerObj;
 		
+		int assignId = id;
 		foreach(NetSyncObj nObj in playerObj.GetComponentsInChildren<NetSyncObj>(true)){
-			Debug.Log ("has nObj");
-			nObj.ID = id;
-		}
-		int cId = id;
-		foreach(SlashHitTest hitTest in playerObj.GetComponentsInChildren<SlashHitTest>(true)){
-			Debug.Log ("has hitTest");
-			hitTest.networkId = cId;
-			hitTest.sendMessage = true;
-			colliders[cId] = hitTest;
-			cId++;
-		}
-		Debug.Log("Assign player ID: " + id + ", collider id: " + cId);
+			nObj.ID = assignId;
+			recipients[assignId] = nObj;
+			Debug.Log ("Assigned Id: " + assignId);
+			assignId += 1000;
+		}	
 	}
 	
 	public void SpawnEnemy(int id, NetworkTransform ntransform, string name) {
@@ -103,31 +90,18 @@ public class PlayerSpawner : MonoBehaviour {
 		RemotePlayer remotePlayer = playerObj.GetComponent<RemotePlayer>();
 		remotePlayer.Init(name);
 		
-		recipients[id] = playerObj;
-		
+		int assignId = id;
 		foreach(NetSyncObj nObj in playerObj.GetComponentsInChildren<NetSyncObj>(true)){
 			nObj.ID = id;
+			recipients[assignId] = nObj;
+			Debug.Log ("Assigned Id: " + assignId);
+			assignId += 1000;
 		}
-		int cId = id;
-		foreach(SlashHitTest hitTest in playerObj.GetComponentsInChildren<SlashHitTest>(true)){
-			hitTest.networkId = cId;
-			hitTest.sendMessage = false;
-			colliders[cId] = hitTest;
-			cId++;
-		}
-		Debug.Log("Assign remote player ID: " + id + ", collider id: " + cId);
 	}
 	
-	public GameObject GetRecipient(int id) {
+	public NetSyncObj GetRecipient(int id) {
 		if (recipients.ContainsKey(id)) {
 			return recipients[id];
-		}
-		return null;
-	}
-	
-	public SlashHitTest GetCollider(int id){
-		if(colliders.ContainsKey(id)){
-			return colliders[id];	
 		}
 		return null;
 	}
@@ -135,25 +109,10 @@ public class PlayerSpawner : MonoBehaviour {
 	public void DestroyEnemy(int id) {
 		Debug.Log ("Destory remote player : " + id);
 
-		GameObject rec = GetRecipient(id);
+		GameObject rec = GetRecipient(id).gameObject;
 		if (rec == null) return;
 		Destroy(rec);
 		recipients.Remove(id);
-	}
-	
-	public void SyncAnimation(int id, string msg, int layer) {
-//		Debug.Log ("Synch player animation: " + id + ", " + msg + ", " + layer);
-//
-//		CharacterPositionReceptor rec = GetRecipient(id);
-//		
-//		if (rec == null) return;
-		//rec.ReceiveAttackMove();
-//		if (layer == 0) {
-//			rec.GetComponent<AnimationSynchronizer>().RemoteStateUpdate(msg);
-//		}
-//		else if (layer == 1) {
-//			rec.GetComponent<AnimationSynchronizer>().RemoteSecondStateUpdate(msg);
-//		}
 	}
 }
 
